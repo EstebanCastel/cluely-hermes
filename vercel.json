@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "name": "echo-hermes",
+  "builds": [
+    {
+      "src": "docs/index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/docs/index.html"
+    }
+  ],
+  "github": {
+    "enabled": true,
+    "autoAlias": true
+  }
+}
