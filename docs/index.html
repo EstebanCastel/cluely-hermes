@@ -3,639 +3,589 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echo — AI Meeting Assistant</title>
-    <meta name="description" content="Open-source meeting intelligence powered by Hermes Agent. Real-time transcription, screen awareness, and AI-driven insights.">
-    
-    <!-- Fonts to match Hermes -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <title>Echo - Meeting Intelligence for Hermes</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        :root {
-            /* Hermes exact colors from their CSS */
-            --hermes-primary: #0053fd;
-            --hermes-primary-dark: #0044dd;
-            --hermes-primary-light: #3366ff;
-            --hermes-background: #f8faff;
-            --hermes-surface: #ffffff;
-            --hermes-text-primary: #17171a;
-            --hermes-text-secondary: #6c757d;
-            --hermes-text-tertiary: #9a968e;
-            --hermes-border: rgba(23, 23, 26, 0.08);
-            --hermes-accent-soft: rgba(0, 83, 253, 0.06);
-            
-            /* Font stacks from Hermes */
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --font-mono: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', ui-monospace, Menlo, Consolas, monospace;
-        }
-
+        
         body {
-            font-family: var(--font-sans);
-            background: var(--hermes-background);
-            color: var(--hermes-text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: #f0f4ff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-
-        /* Subtle dot grid background like Hermes docs */
+        
+        /* Grid pattern background */
         body::before {
             content: '';
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: radial-gradient(circle at 1px 1px, rgba(0, 83, 253, 0.03) 1px, transparent 1px);
-            background-size: 32px 32px;
+            background-image: radial-gradient(circle, #c0d0ff 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
             pointer-events: none;
-            z-index: 0;
         }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(248, 250, 255, 0.92);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--hermes-border);
-            z-index: 1000;
-            padding: 1.25rem 0;
-        }
-
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        
+        /* Header Navigation */
+        .header {
+            position: relative;
+            padding: 2rem 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
         }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            color: var(--hermes-primary);
-            font-weight: 600;
-            font-size: 1.25rem;
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0053fd;
             letter-spacing: -0.02em;
         }
-
-        .nav-logo img {
-            width: 32px;
-            height: 32px;
-        }
-
-        .nav-center {
+        
+        .nav {
             display: flex;
-            gap: 3rem;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            gap: 0;
         }
-
-        .nav-center a {
-            color: var(--hermes-text-primary);
+        
+        .nav-item {
+            padding: 0.75rem 2rem;
+            border: 1px solid #d0deff;
+            background: rgba(255, 255, 255, 0.8);
+            color: #0053fd;
             text-decoration: none;
             font-size: 0.875rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            transition: color 0.2s;
+            transition: all 0.2s;
         }
-
-        .nav-center a:hover {
-            color: var(--hermes-primary);
+        
+        .nav-item:first-child {
+            border-radius: 6px 0 0 6px;
         }
-
-        .nav-right {
+        
+        .nav-item:last-child {
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .nav-item:not(:last-child) {
+            border-right: none;
+        }
+        
+        .nav-item:hover {
+            background: #0053fd;
+            color: white;
+        }
+        
+        .social-links {
             display: flex;
             gap: 1rem;
-            align-items: center;
         }
-
-        .nav-socials {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .nav-socials a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        
+        .social-link {
             width: 32px;
             height: 32px;
-            color: var(--hermes-text-secondary);
-            transition: color 0.2s;
-        }
-
-        .nav-socials a:hover {
-            color: var(--hermes-primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8rem 2rem 4rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #d0deff;
+            color: #0053fd;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .social-link:hover {
+            background: #0053fd;
+            color: white;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
             position: relative;
             z-index: 1;
         }
-
-        .hero-container {
-            max-width: 1280px;
-            margin: 0 auto;
+        
+        .badge {
             text-align: center;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
+            margin-bottom: 3rem;
+            font-size: 0.875rem;
+            color: #6b7280;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--hermes-text-secondary);
-            margin-bottom: 2.5rem;
         }
-
-        .hero h1 {
+        
+        .hero-title {
+            text-align: center;
             font-size: 3.5rem;
-            font-weight: 700;
+            font-weight: 800;
             line-height: 1.1;
-            letter-spacing: -0.02em;
-            margin-bottom: 1.5rem;
-            color: var(--hermes-primary);
+            letter-spacing: -0.03em;
+            color: #0053fd;
+            margin-bottom: 2rem;
         }
-
-        @media (min-width: 768px) {
-            .hero h1 {
-                font-size: 4.5rem;
-            }
-        }
-
+        
         .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--hermes-text-secondary);
+            text-align: center;
             max-width: 700px;
-            margin: 0 auto 3rem;
+            margin: 0 auto 4rem;
+            font-size: 1.125rem;
             line-height: 1.6;
+            color: #4b5563;
         }
-
-        /* Command blocks */
-        .install-commands {
+        
+        /* OS Tabs */
+        .os-tabs {
             display: flex;
-            flex-direction: column;
             gap: 1rem;
-            max-width: 700px;
-            margin: 0 auto 3rem;
+            justify-content: center;
+            margin-bottom: 2rem;
         }
-
-        .command-block {
-            background: var(--hermes-surface);
-            border: 1px solid var(--hermes-border);
-            border-radius: 8px;
-            padding: 1rem 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .command-block:hover {
-            border-color: var(--hermes-primary);
-            box-shadow: 0 0 0 3px var(--hermes-accent-soft);
-        }
-
-        .command-label {
-            position: absolute;
-            top: -8px;
-            left: 12px;
-            background: var(--hermes-surface);
-            padding: 0 6px;
-            font-size: 0.625rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--hermes-text-tertiary);
-        }
-
-        .command-text {
-            font-family: var(--font-mono);
+        
+        .os-tab {
+            padding: 0.5rem 1.5rem;
+            background: white;
+            border: 1px solid #d0deff;
+            border-radius: 6px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
             font-size: 0.875rem;
-            color: var(--hermes-text-primary);
         }
-
+        
+        .os-tab.active {
+            background: #0053fd;
+            color: white;
+            border-color: #0053fd;
+        }
+        
+        /* Command Blocks */
+        .commands {
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+        
+        .command-block {
+            background: white;
+            border: 1px solid #d0deff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .command-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+        
+        .command-box {
+            background: #f8faff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 0.875rem;
+            color: #1f2937;
+            position: relative;
+        }
+        
         .copy-button {
-            background: transparent;
-            border: none;
-            color: var(--hermes-text-tertiary);
-            font-family: var(--font-mono);
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.375rem 0.75rem;
+            background: white;
+            border: 1px solid #d0deff;
+            border-radius: 4px;
+            color: #6b7280;
             font-size: 0.75rem;
             cursor: pointer;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             transition: all 0.2s;
         }
-
+        
         .copy-button:hover {
-            background: var(--hermes-accent-soft);
-            color: var(--hermes-primary);
+            background: #0053fd;
+            color: white;
+            border-color: #0053fd;
         }
-
-        /* See it in action section */
+        
+        /* Terminal Demo Section */
         .demo-section {
-            padding: 6rem 2rem;
-            background: var(--hermes-surface);
-            border-top: 1px solid var(--hermes-border);
+            margin: 6rem 0;
         }
-
-        .section-container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 0.875rem;
-            font-weight: 600;
+        
+        .demo-title {
+            font-size: 1.125rem;
+            color: #0053fd;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--hermes-primary);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
-
-        .terminal-window {
-            background: #0a0a12;
-            border: 1px solid rgba(0, 83, 253, 0.2);
-            border-radius: 12px;
+        
+        .terminal {
+            background: #1a1a1f;
+            border: 1px solid #0053fd;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
         }
-
+        
         .terminal-header {
-            background: #14142a;
+            background: #0f0f12;
             padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            border-bottom: 1px solid rgba(0, 83, 253, 0.1);
+            border-bottom: 1px solid #2a2a2f;
         }
-
+        
         .terminal-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #4a4a5e;
         }
-
-        .terminal-dot:first-child {
-            background: #ff5f56;
-        }
-
-        .terminal-dot:nth-child(2) {
-            background: #ffbd2e;
-        }
-
-        .terminal-dot:nth-child(3) {
-            background: #27c93f;
-        }
-
+        
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #28ca42; }
+        
         .terminal-title {
-            margin-left: auto;
-            margin-right: auto;
-            font-family: var(--font-mono);
+            flex: 1;
+            text-align: center;
+            color: #6b7280;
             font-size: 0.75rem;
-            color: #9a968e;
-            text-transform: uppercase;
             letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
-
-        .terminal-content {
-            padding: 1.5rem;
-            font-family: var(--font-mono);
+        
+        .terminal-body {
+            padding: 2rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
             font-size: 0.875rem;
             line-height: 1.6;
-            color: #e8e4dc;
+            color: #e5e7eb;
+            min-height: 300px;
         }
-
+        
         .terminal-prompt {
-            color: #0053fd;
+            color: #28ca42;
             margin-right: 0.5rem;
         }
-
+        
         .terminal-command {
-            color: #ffd700;
+            color: #60a5fa;
         }
-
+        
         .terminal-output {
-            color: #9a968e;
+            color: #9ca3af;
+            margin-top: 0.5rem;
             margin-left: 1rem;
         }
-
-        /* Features Section */
+        
+        /* Features Grid */
         .features {
-            padding: 6rem 2rem;
-            background: var(--hermes-background);
+            margin: 6rem 0;
         }
-
+        
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-
+        
         .feature-card {
-            background: var(--hermes-surface);
-            border: 1px solid var(--hermes-border);
+            background: white;
+            border: 1px solid #d0deff;
             border-radius: 8px;
             padding: 2rem;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
         }
-
+        
         .feature-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-color: #0053fd;
+            box-shadow: 0 4px 20px rgba(0, 83, 253, 0.1);
         }
-
+        
         .feature-title {
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--hermes-text-primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0053fd;
             margin-bottom: 1rem;
+            letter-spacing: -0.01em;
         }
-
+        
         .feature-description {
-            color: var(--hermes-text-secondary);
+            color: #4b5563;
             line-height: 1.6;
         }
-
+        
         /* Footer */
-        footer {
-            padding: 4rem 2rem 2rem;
-            background: var(--hermes-surface);
-            border-top: 1px solid var(--hermes-border);
+        .footer {
+            margin-top: 8rem;
+            padding: 3rem;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
         }
-
-        .footer-container {
-            max-width: 1280px;
-            margin: 0 auto;
+        
+        .footer-links {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-left {
-            display: flex;
-            align-items: center;
             gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
         }
-
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 600;
-            color: var(--hermes-text-primary);
-        }
-
-        .footer-brand img {
-            width: 24px;
-            height: 24px;
-        }
-
-        .footer-version {
-            font-size: 0.875rem;
-            color: var(--hermes-text-tertiary);
-        }
-
-        .footer-right {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-        }
-
+        
         .footer-link {
-            color: var(--hermes-text-secondary);
+            color: #0053fd;
             text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s;
         }
-
+        
         .footer-link:hover {
-            color: var(--hermes-primary);
-        }
-
-        .hermes-link {
-            color: var(--hermes-primary);
-            font-weight: 500;
-        }
-
-        /* Logo placeholder SVG */
-        .logo-placeholder {
-            width: 32px;
-            height: 32px;
-            fill: currentColor;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-center {
-                display: none;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-container {
-                flex-direction: column;
-                gap: 2rem;
-            }
-
-            .footer-right {
-                flex-direction: column;
-                gap: 1rem;
-            }
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="nav-logo">
-                <img src="assets/icons/echo-logo.svg" alt="Echo" onerror="this.style.display='none'">
-                ECHO
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">ECHO</div>
+        <nav class="nav">
+            <a href="#docs" class="nav-item">DOCS</a>
+            <a href="#features" class="nav-item">FEATURES</a>
+            <a href="https://portal.hermes-agent.com" class="nav-item">PORTAL</a>
+            <a href="#desktop" class="nav-item">DESKTOP APP</a>
+            <a href="#socials" class="nav-item">SOCIALS</a>
+        </nav>
+        <div class="social-links">
+            <a href="https://github.com/EstebanCastel/cluely-hermes" class="social-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
             </a>
-            <div class="nav-center">
-                <a href="https://github.com/EstebanCastel/cluely-hermes/wiki">DOCS</a>
-                <a href="#features">FEATURES</a>
-                <a href="https://hermes-agent.nousresearch.com">PORTAL</a>
-                <a href="https://github.com/EstebanCastel/cluely-hermes/releases">DESKTOP APP</a>
+            <a href="https://discord.gg/hermes" class="social-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Badge -->
+        <div class="badge">OPEN SOURCE • MIT LICENSE</div>
+        
+        <!-- Hero -->
+        <h1 class="hero-title">
+            THE AGENT THAT<br>
+            GROWS WITH YOU.
+        </h1>
+        
+        <p class="hero-subtitle">
+            Not a coding copilot tethered to an IDE or a chatbot wrapper around a single API. 
+            An autonomous agent that lives on your server, remembers what it learns, and gets 
+            more capable the longer it runs — now with meeting intelligence.
+        </p>
+        
+        <!-- OS Tabs -->
+        <div class="os-tabs">
+            <button class="os-tab active" onclick="switchOS('macos')">macOS / Linux</button>
+            <button class="os-tab" onclick="switchOS('windows')">Windows</button>
+        </div>
+        
+        <!-- Installation Commands -->
+        <div class="commands">
+            <div class="command-block">
+                <div class="command-label">1. INSTALL</div>
+                <div class="command-box">
+                    <span id="install-cmd">git clone https://github.com/EstebanCastel/cluely-hermes.git</span>
+                    <button class="copy-button" onclick="copyCommand('install-cmd')">Copy</button>
+                </div>
             </div>
-            <div class="nav-right">
-                <div class="nav-socials">
-                    <a href="https://discord.gg/nous-research" title="Discord">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                        </svg>
-                    </a>
-                    <a href="https://github.com/EstebanCastel/cluely-hermes" title="GitHub">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                        </svg>
-                    </a>
+            
+            <div class="command-block">
+                <div class="command-label">2. CONFIGURE</div>
+                <div class="command-box">
+                    <span id="config-cmd">cd cluely-hermes && npm install</span>
+                    <button class="copy-button" onclick="copyCommand('config-cmd')">Copy</button>
+                </div>
+            </div>
+
+            <div class="command-block">
+                <div class="command-label">3. CONNECT TO HERMES</div>
+                <div class="command-box">
+                    <span id="connect-cmd">echo setup --calendar google --transcripts enabled</span>
+                    <button class="copy-button" onclick="copyCommand('connect-cmd')">Copy</button>
                 </div>
             </div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-container">
-            <p class="hero-badge">OPEN SOURCE • MIT LICENSE</p>
-            <h1>THE AGENT THAT<br>GROWS WITH YOU.</h1>
-            <p class="hero-subtitle">
-                Not a coding copilot tethered to an IDE or a chatbot wrapper around a single API. 
-                An autonomous agent that lives on your server, remembers what it learns, and gets 
-                more capable the longer it runs — now with meeting intelligence.
-            </p>
-
-            <div class="install-commands">
-                <div class="command-block">
-                    <span class="command-label">1. INSTALL</span>
-                    <span class="command-text">git clone https://github.com/EstebanCastel/cluely-hermes.git</span>
-                    <button class="copy-button" onclick="copyCommand(this, 'git clone https://github.com/EstebanCastel/cluely-hermes.git')">Copy</button>
-                </div>
-                <div class="command-block">
-                    <span class="command-label">2. CONFIGURE</span>
-                    <span class="command-text">cd cluely-hermes && npm install</span>
-                    <button class="copy-button" onclick="copyCommand(this, 'cd cluely-hermes && npm install')">Copy</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- See it in action -->
-    <section class="demo-section">
-        <div class="section-container">
-            <h2 class="section-title">SEE IT IN ACTION</h2>
-            <div class="terminal-window">
+        
+        <!-- Terminal Demo -->
+        <div class="demo-section">
+            <h2 class="demo-title">SEE IT IN ACTION</h2>
+            <div class="terminal">
                 <div class="terminal-header">
-                    <span class="terminal-dot"></span>
-                    <span class="terminal-dot"></span>
-                    <span class="terminal-dot"></span>
-                    <span class="terminal-title">ECHO</span>
+                    <div class="terminal-dot red"></div>
+                    <div class="terminal-dot yellow"></div>
+                    <div class="terminal-dot green"></div>
+                    <div class="terminal-title">ECHO</div>
                 </div>
-                <div class="terminal-content">
+                <div class="terminal-body">
                     <div>
                         <span class="terminal-prompt">❯</span>
-                        <span class="terminal-command">echo start --meeting "Engineering Standup"</span>
+                        <span class="terminal-command">echo capture "Sprint Planning Meeting"</span>
                     </div>
                     <div class="terminal-output">
-                        Starting Echo meeting assistant...<br>
-                        ✓ Audio device configured: BlackHole 2ch<br>
-                        ✓ Deepgram API connected<br>
-                        ✓ Hermes Agent initialized<br>
-                        ✓ Obsidian vault connected<br>
-                        Recording... [Press Cmd+S for screenshot]
+                        ✓ Connected to Google Calendar<br>
+                        ✓ Meeting detected: Sprint Planning (10:00 AM - 11:00 AM)<br>
+                        ✓ Recording started...<br>
+                        ✓ Participants: 4 detected<br>
+                        ✓ Real-time transcription active
+                    </div>
+                    <br>
+                    <div>
+                        <span class="terminal-prompt">❯</span>
+                        <span class="terminal-command">echo summary --format markdown</span>
+                    </div>
+                    <div class="terminal-output">
+                        📝 Generating meeting summary...<br>
+                        ✓ Key decisions: 3 identified<br>
+                        ✓ Action items: 7 extracted<br>
+                        ✓ Follow-ups: 2 scheduled<br>
+                        ✓ Summary saved to: ~/meetings/2024-01-15-sprint-planning.md
+                    </div>
+                    <br>
+                    <div>
+                        <span class="terminal-prompt">❯</span>
+                        <span class="terminal-command">hermes "Review the sprint planning decisions"</span>
+                    </div>
+                    <div class="terminal-output">
+                        🤖 I've reviewed the sprint planning meeting. Here are the key decisions:<br>
+                        1. Feature X moved to next sprint due to dependency on backend API<br>
+                        2. Alice will lead the authentication refactor (3 story points)<br>
+                        3. Deploy to staging by Thursday for QA testing
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features">
-        <div class="section-container">
-            <h2 class="section-title">FEATURES</h2>
+        
+        <!-- Features Grid -->
+        <div class="features" id="features">
             <div class="features-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">CALENDAR INTEGRATION</h3>
+                    <p class="feature-description">
+                        Seamlessly connects with Google Calendar, Outlook, and CalDAV. 
+                        Automatically detects meetings, joins at the right time, and captures 
+                        everything without manual intervention.
+                    </p>
+                </div>
+                
                 <div class="feature-card">
                     <h3 class="feature-title">REAL-TIME TRANSCRIPTION</h3>
                     <p class="feature-description">
-                        Diarized speaker separation powered by Deepgram Nova-2. Captures every word 
-                        with automatic speaker identification using channel-based audio routing.
+                        Advanced speech-to-text engine that identifies speakers, handles 
+                        crosstalk, and maintains context. Works with virtual and in-person 
+                        meetings across all major platforms.
                     </p>
                 </div>
+                
                 <div class="feature-card">
-                    <h3 class="feature-title">HERMES INTELLIGENCE</h3>
+                    <h3 class="feature-title">INTELLIGENT SUMMARIES</h3>
                     <p class="feature-description">
-                        Leverages Hermes Agent as the core reasoning engine. Processes meeting context 
-                        in real-time to extract insights, decisions, and action items automatically.
+                        Powered by state-of-the-art LLMs to extract decisions, action items, 
+                        and key discussions. Customizable formats from bullet points to 
+                        detailed narratives.
                     </p>
                 </div>
+                
                 <div class="feature-card">
-                    <h3 class="feature-title">SCREEN AWARENESS</h3>
+                    <h3 class="feature-title">HERMES MEMORY</h3>
                     <p class="feature-description">
-                        Capture and analyze screen content during meetings. Vision model integration 
-                        provides context-aware assistance for technical discussions and presentations.
+                        Meeting context becomes part of Hermes Agent's long-term memory. 
+                        Ask about past decisions, track action items across meetings, and 
+                        maintain project continuity.
                     </p>
                 </div>
+                
                 <div class="feature-card">
-                    <h3 class="feature-title">OBSIDIAN INTEGRATION</h3>
+                    <h3 class="feature-title">PRIVACY FIRST</h3>
                     <p class="feature-description">
-                        Automatically saves structured meeting notes to your Obsidian vault. Includes 
-                        summaries, action items, and full transcripts in markdown format.
+                        All processing happens locally on your infrastructure. No cloud 
+                        storage, no third-party access. You own your data, always. 
+                        Enterprise-grade encryption throughout.
                     </p>
                 </div>
+                
                 <div class="feature-card">
-                    <h3 class="feature-title">CALENDAR SYNC</h3>
+                    <h3 class="feature-title">EXTENSIBLE PLATFORM</h3>
                     <p class="feature-description">
-                        Connects with Google Calendar to track scheduled meetings. Automatically starts 
-                        recording when meetings begin and adds context from calendar events.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <h3 class="feature-title">REAL SANDBOXING</h3>
-                    <p class="feature-description">
-                        Five backends — local, Docker, SSH, Singularity, Modal — with container 
-                        hardening and namespace isolation. All processing happens locally.
+                        Built on Chrome Extension architecture with a powerful API. Create 
+                        custom workflows, integrate with your tools, and extend functionality 
+                        through the Hermes ecosystem.
                     </p>
                 </div>
             </div>
         </div>
-    </section>
-
+    </div>
+    
     <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-left">
-                <div class="footer-brand">
-                    <img src="assets/icons/echo-logo.svg" alt="Echo" onerror="this.style.display='none'">
-                    <span>ECHO</span>
-                </div>
-                <span class="footer-version">v0.1.0</span>
-            </div>
-            <div class="footer-right">
-                <a href="https://nousresearch.com" class="footer-link hermes-link">NOUS RESEARCH ↗</a>
-                <span class="footer-link">MIT LICENSE · 2024</span>
-            </div>
+    <footer class="footer">
+        <div>Built with dedication by the open-source community</div>
+        <div class="footer-links">
+            <a href="https://github.com/EstebanCastel/cluely-hermes" class="footer-link">GitHub</a>
+            <a href="https://hermes-agent.com" class="footer-link">Hermes Agent</a>
+            <a href="https://discord.gg/hermes" class="footer-link">Discord</a>
+            <a href="/docs" class="footer-link">Documentation</a>
         </div>
     </footer>
-
+    
     <script>
-        function copyCommand(button, text) {
+        function switchOS(os) {
+            document.querySelectorAll('.os-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update commands based on OS
+            if (os === 'windows') {
+                document.getElementById('install-cmd').textContent = 'git clone https://github.com/EstebanCastel/cluely-hermes.git';
+                document.getElementById('config-cmd').textContent = 'cd cluely-hermes && npm install';
+            } else {
+                document.getElementById('install-cmd').textContent = 'git clone https://github.com/EstebanCastel/cluely-hermes.git';
+                document.getElementById('config-cmd').textContent = 'cd cluely-hermes && npm install';
+            }
+        }
+        
+        function copyCommand(elementId) {
+            const text = document.getElementById(elementId).textContent;
             navigator.clipboard.writeText(text).then(() => {
+                const button = event.target;
                 const originalText = button.textContent;
                 button.textContent = 'Copied!';
-                button.style.color = '#0053fd';
                 setTimeout(() => {
                     button.textContent = originalText;
-                    button.style.color = '';
                 }, 2000);
             });
         }
