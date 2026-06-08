@@ -3,90 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echo - AI-Powered Meeting Assistant</title>
-    <meta name="description" content="Open-source meeting assistant powered by Hermes. Real-time transcription, screen context, and intelligent insights.">
+    <title>Echo — AI Meeting Assistant Powered by Hermes</title>
+    <meta name="description" content="Open-source meeting intelligence platform. Real-time transcription, screen awareness, and Hermes-powered insights. A privacy-first alternative to Cluely.">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdOb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI4IiBmaWxsPSIjMDUwNTA3Ii8+PHBhdGggZD0iTTE2IDhDMTEuNTggOCA4IDExLjU4IDggMTZDOCAyMC40MiAxMS41OCAyNCAxNiAyNEMyMC40MiAyNCAyNCAyMC40MiAyNCAxNkMyNCAxMS41OCAyMC40MiA4IDE2IDhaIiBzdHJva2U9IiMwMGQ5OTIiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjMiIGZpbGw9IiMwMGQ5OTIiLz48L3N2Zz4=">
     
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Styles -->
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #22c55e;
-            --bg-dark: #0a0a0a;
-            --bg-card: #111111;
-            --bg-hover: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --border: #27272a;
-            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
+        /* Reset and Base */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            /* Core Colors - VoltAgent inspired dark theme */
+            --bg-abyss: #050507;
+            --bg-carbon: #101010;
+            --bg-surface: #1a1a1c;
+            --border-warm: #3d3a39;
+            --border-subtle: rgba(61, 58, 57, 0.4);
+            
+            /* Text hierarchy */
+            --text-primary: #f2f2f2;
+            --text-secondary: #b8b3b0;
+            --text-tertiary: #8b949e;
+            --text-muted: #5e5d59;
+            
+            /* Brand accent - Hermes green */
+            --accent-primary: #00d992;
+            --accent-hover: #00ffaa;
+            --accent-muted: #2fd6a1;
+            --accent-glow: rgba(0, 217, 146, 0.3);
+            
+            /* Semantic */
+            --error: #fb565b;
+            --warning: #ffba00;
+            --success: #10b981;
+            
+            /* Typography */
+            --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            
+            /* Shadows and effects */
+            --shadow-ambient: rgba(92, 88, 85, 0.2) 0px 0px 15px;
+            --shadow-dramatic: rgba(0, 0, 0, 0.7) 0px 20px 60px;
+            --glow-green: drop-shadow(0 0 20px rgba(0, 217, 146, 0.5));
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-dark);
+            font-family: var(--font-sans);
+            background: var(--bg-abyss);
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Animated gradient background */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(ellipse at top left, #1a1a2e 0%, transparent 50%),
-                        radial-gradient(ellipse at bottom right, #16213e 0%, transparent 50%),
-                        var(--bg-dark);
-            z-index: -1;
-        }
-
-        .bg-grid {
+        /* Terminal Grid Background */
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-            opacity: 0.5;
+                radial-gradient(circle at 20% 50%, var(--accent-glow) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-glow) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, var(--accent-glow) 0%, transparent 50%);
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        /* Header */
-        header {
+        /* Dot pattern overlay */
+        body::after {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            padding: 1rem 2rem;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
+            bottom: 0;
+            background-image: radial-gradient(circle, var(--border-subtle) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        nav {
-            max-width: 1200px;
+        /* Container */
+        .container {
+            max-width: 1280px;
             margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-warm);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -96,26 +129,51 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
             text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        .logo:hover {
-            opacity: 0.9;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--gradient-1);
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-primary);
+            border-radius: 6px;
+            opacity: 0.2;
+            animation: pulse 2s infinite;
+        }
+
+        .logo-icon svg {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            fill: var(--accent-primary);
+            filter: var(--glow-green);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(0, 217, 146, 0.8)); }
+            50% { filter: drop-shadow(0 0 12px rgba(0, 217, 146, 1)); }
         }
 
         .nav-links {
@@ -127,396 +185,568 @@
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
+            font-size: 0.875rem;
             font-weight: 500;
             transition: color 0.2s;
+            font-family: var(--font-mono);
+            letter-spacing: 0.5px;
         }
 
         .nav-links a:hover {
-            color: var(--text-primary);
+            color: var(--accent-primary);
         }
 
-        .github-button {
-            display: inline-flex;
+        .github-stars {
+            display: flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            background: var(--bg-carbon);
+            border: 1px solid var(--border-warm);
+            border-radius: 6px;
             color: var(--text-primary);
             text-decoration: none;
-            font-weight: 500;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
             transition: all 0.2s;
         }
 
-        .github-button:hover {
-            background: var(--bg-hover);
-            border-color: var(--text-muted);
-        }
-
-        /* Main content */
-        main {
-            margin-top: 80px;
-            padding: 2rem;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
+        .github-stars:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 1px var(--accent-glow);
         }
 
         /* Hero Section */
         .hero {
-            padding: 4rem 0 6rem;
+            padding: 10rem 0 6rem;
+            position: relative;
+        }
+
+        .hero-content {
             text-align: center;
         }
 
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 1rem;
+            background: var(--bg-carbon);
+            border: 1px solid var(--accent-primary);
+            border-radius: 999px;
+            color: var(--accent-primary);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
         .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 4rem;
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: -2px;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
         }
 
-        .hero .subtitle {
+        .hero-subtitle {
             font-size: 1.5rem;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-weight: 400;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .hero .description {
+        .hero-description {
+            max-width: 650px;
+            margin: 0 auto 3rem;
+            color: var(--text-tertiary);
             font-size: 1.125rem;
-            color: var(--text-muted);
+            line-height: 1.7;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        /* Command Block */
+        .command-block {
             max-width: 600px;
             margin: 0 auto 3rem;
-            line-height: 1.7;
+            background: var(--bg-carbon);
+            border: 1px solid var(--border-warm);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            animation: fadeInUp 1.4s ease-out;
         }
 
-        .cta-buttons {
+        .command-label {
+            position: absolute;
+            top: -10px;
+            left: 1rem;
+            background: var(--bg-carbon);
+            padding: 0 0.5rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .command-text {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .copy-button {
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--border-warm);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+
+        .copy-button:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* CTA Buttons */
+        .cta-group {
             display: flex;
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
+            animation: fadeInUp 1.6s ease-out;
         }
 
         .btn {
             padding: 0.875rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-weight: 500;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             transition: all 0.2s;
-            font-size: 1rem;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
             cursor: pointer;
             border: none;
         }
 
         .btn-primary {
-            background: var(--primary);
-            color: white;
+            background: var(--bg-carbon);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            background: var(--accent-primary);
+            color: var(--bg-abyss);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .btn-secondary {
-            background: var(--bg-card);
+        .btn-ghost {
+            background: transparent;
             color: var(--text-primary);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-warm);
         }
 
-        .btn-secondary:hover {
-            background: var(--bg-hover);
-            border-color: var(--text-muted);
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--text-secondary);
         }
 
-        /* Features Grid */
+        /* Features Section */
         .features {
-            margin: 6rem 0;
+            padding: 6rem 0;
+            position: relative;
         }
 
-        .section-title {
+        .section-header {
             text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             margin-bottom: 1rem;
         }
 
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-secondary);
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 400;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-description {
+            color: var(--text-tertiary);
             font-size: 1.125rem;
-            margin-bottom: 3rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
         }
 
         .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: var(--bg-carbon);
+            border: 1px solid var(--border-warm);
+            border-radius: 8px;
             padding: 2rem;
+            position: relative;
             transition: all 0.3s;
         }
 
         .feature-card:hover {
-            background: var(--bg-hover);
-            border-color: var(--text-muted);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-ambient);
+            transform: translateY(-2px);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            filter: var(--glow-green);
         }
 
         .feature-icon {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+            transition: all 0.3s;
         }
 
         .feature-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 1.125rem;
             font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
         }
 
         .feature-card p {
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
             line-height: 1.6;
+            font-size: 0.875rem;
+        }
+
+        .feature-card .feature-code {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-abyss);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            overflow-x: auto;
         }
 
         /* Architecture Section */
         .architecture {
-            margin: 6rem 0;
-            padding: 4rem 0;
-            background: var(--bg-card);
-            border-radius: 24px;
-            border: 1px solid var(--border);
-        }
-
-        .architecture-content {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 2rem;
+            padding: 6rem 0;
+            background: var(--bg-carbon);
+            border-top: 1px solid var(--border-warm);
+            border-bottom: 1px solid var(--border-warm);
         }
 
         .architecture-diagram {
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            max-width: 900px;
+            margin: 3rem auto;
             padding: 2rem;
-            margin: 2rem 0;
+            background: var(--bg-abyss);
+            border: 1px solid var(--border-warm);
+            border-radius: 8px;
         }
 
-        .flow-chart {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+        .flow-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
+            align-items: center;
         }
 
-        .flow-item {
-            flex: 1;
-            min-width: 150px;
+        .flow-step {
             text-align: center;
             padding: 1.5rem;
-            background: var(--bg-hover);
-            border-radius: 12px;
-            border: 1px solid var(--border);
+            background: var(--bg-carbon);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            position: relative;
+            transition: all 0.3s;
         }
 
-        .flow-arrow {
+        .flow-step:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-primary);
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .flow-title {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .flow-detail {
+            font-size: 0.75rem;
             color: var(--text-muted);
+        }
+
+        /* Code Examples */
+        .code-showcase {
+            padding: 6rem 0;
+        }
+
+        .code-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .code-content h3 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .code-content p {
+            color: var(--text-tertiary);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .code-block-large {
+            background: var(--bg-carbon);
+            border: 1px solid var(--border-warm);
+            border-radius: 8px;
+            padding: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block-large::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-hover));
+        }
+
+        .code-line {
+            margin: 0.25rem 0;
+            color: var(--text-secondary);
+        }
+
+        .code-comment {
+            color: var(--text-muted);
+        }
+
+        .code-keyword {
+            color: var(--accent-primary);
+        }
+
+        .code-string {
+            color: var(--accent-muted);
+        }
+
+        /* Integration Section */
+        .integrations {
+            padding: 6rem 0;
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .integration-card {
+            background: var(--bg-carbon);
+            border: 1px solid var(--border-warm);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .integration-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        .integration-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-abyss);
+            border-radius: 8px;
             font-size: 1.5rem;
         }
 
-        /* Installation Section */
-        .installation {
-            margin: 6rem 0;
-        }
-
-        .install-steps {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-
-        .step {
-            margin-bottom: 2rem;
-        }
-
-        .step-number {
-            display: inline-flex;
-            width: 32px;
-            height: 32px;
-            align-items: center;
-            justify-content: center;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
+        .integration-info h4 {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
             font-weight: 600;
-            margin-right: 1rem;
+            margin-bottom: 0.25rem;
         }
 
-        .step h4 {
-            display: inline;
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-
-        .step p {
-            margin-top: 0.5rem;
-            margin-left: 3rem;
-            color: var(--text-secondary);
-        }
-
-        .code-block {
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1rem 0 1rem 3rem;
-            overflow-x: auto;
-        }
-
-        .code-block pre {
-            margin: 0;
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-            font-size: 0.9rem;
-            color: #e4e4e7;
-            line-height: 1.6;
-        }
-
-        .copy-button {
-            float: right;
-            background: var(--bg-hover);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-button:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Integration Guide */
-        .integration-card {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-
-        .integration-card h3 {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary);
-        }
-
-        /* Requirements */
-        .requirements-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .requirement-item {
-            background: var(--bg-hover);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .requirement-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--primary);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .integration-info p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
         /* Footer */
         footer {
-            margin-top: 8rem;
-            padding: 3rem 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
+            padding: 4rem 0 2rem;
+            border-top: 1px solid var(--border-warm);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .footer-brand p {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h4 {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
             color: var(--text-muted);
         }
 
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-bottom: 2rem;
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
         }
 
         .footer-links a {
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
             text-decoration: none;
+            font-size: 0.875rem;
             transition: color 0.2s;
         }
 
         .footer-links a:hover {
-            color: var(--text-primary);
+            color: var(--accent-primary);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
 
-            .hero .subtitle {
-                font-size: 1.25rem;
-            }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
 
-            .nav-links {
-                gap: 1rem;
-            }
+        .footer-social a {
+            color: var(--text-tertiary);
+            transition: color 0.2s;
+        }
 
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
+        .footer-social a:hover {
+            color: var(--accent-primary);
         }
 
         /* Animations */
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -527,560 +757,391 @@
             }
         }
 
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .flow-container {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-step::after {
+                display: none;
+            }
+
+            .code-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Background effects -->
-    <div class="bg-gradient"></div>
-    <div class="bg-grid"></div>
-
-    <!-- Header -->
-    <header>
-        <nav>
-            <a href="#" class="logo">
-                <div class="logo-icon">🎙️</div>
-                <span>Echo</span>
-            </a>
-            <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#installation">Installation</a>
-                <a href="#integration">Integration</a>
-                <a href="#docs">Docs</a>
-                <a href="https://github.com/EstebanCastel/cluely-hermes" class="github-button" target="_blank">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    GitHub
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                            <path d="M12 2 L12 6 M12 18 L12 22 M2 12 L6 12 M18 12 L22 12" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <span>Echo</span>
                 </a>
+                <div class="nav-links">
+                    <a href="#features">FEATURES</a>
+                    <a href="#architecture">ARCHITECTURE</a>
+                    <a href="#integration">INTEGRATION</a>
+                    <a href="https://github.com/EstebanCastel/cluely-hermes/wiki" target="_blank">DOCS</a>
+                    <a href="https://github.com/EstebanCastel/cluely-hermes" class="github-stars" target="_blank">
+                        ⭐ GitHub
+                    </a>
+                </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section class="hero fade-in">
-            <h1>AI-Powered Meeting Assistant</h1>
-            <p class="subtitle">Open-source alternative to Cluely, powered by Hermes</p>
-            <p class="description">
-                Echo transforms your meetings with real-time transcription, intelligent context awareness, 
-                and Hermes-powered insights. Connect with Obsidian for automatic note-taking and 
-                Google Calendar for seamless scheduling.
-            </p>
-            <div class="cta-buttons">
-                <a href="#installation" class="btn btn-primary">
-                    🚀 Get Started
-                </a>
-                <a href="https://github.com/EstebanCastel/cluely-hermes" class="btn btn-secondary" target="_blank">
-                    View on GitHub
-                </a>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span>🟢</span>
+                    <span>Open Source • Hermes Powered</span>
+                </div>
+                <h1>
+                    <span class="gradient">AI Meeting Assistant</span><br>
+                    Engineering Platform
+                </h1>
+                <p class="hero-subtitle">Real-time transcription meets intelligent context</p>
+                <p class="hero-description">
+                    Echo transforms meetings into actionable intelligence. Powered by Hermes AI, 
+                    it provides real-time diarized transcription, screen awareness, and automatic 
+                    note generation while keeping your data private and local.
+                </p>
+                
+                <div class="command-block">
+                    <span class="command-label">Quick Install</span>
+                    <div class="command-text">
+                        <span>git clone https://github.com/EstebanCastel/cluely-hermes.git</span>
+                        <button class="copy-button" onclick="copyCommand()">COPY</button>
+                    </div>
+                </div>
+
+                <div class="cta-group">
+                    <a href="#integration" class="btn btn-primary">
+                        <span>→</span> Get Started
+                    </a>
+                    <a href="https://github.com/EstebanCastel/cluely-hermes" class="btn btn-ghost" target="_blank">
+                        View Source
+                    </a>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Features Section -->
-        <section id="features" class="features">
-            <h2 class="section-title">Powerful Features</h2>
-            <p class="section-subtitle">Everything you need for intelligent meeting assistance</p>
-            
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">// Core Features</span>
+                <h2 class="section-title">Engineering-First Meeting Intelligence</h2>
+                <p class="section-description">
+                    Built for developers who need more than just transcription
+                </p>
+            </div>
+
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🎙️</div>
-                    <h3>Live Diarized Transcription</h3>
-                    <p>Real-time speaker separation using Deepgram API with channel-based diarization through macOS Aggregate Device.</p>
+                    <h3>Diarized Transcription</h3>
+                    <p>Real-time speaker separation using Deepgram's neural networks with channel-based diarization through macOS Aggregate Device architecture.</p>
+                    <div class="feature-code">deepgram.listen.live({diarize: true})</div>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">🧠</div>
-                    <h3>Hermes-Powered Intelligence</h3>
-                    <p>Leverages Hermes AI agent as the reasoning engine, providing contextual insights and intelligent responses during meetings.</p>
+                    <h3>Hermes AI Core</h3>
+                    <p>Leverages Hermes agent as the reasoning engine via Python sidecar bridge, providing contextual understanding and intelligent meeting insights.</p>
+                    <div class="feature-code">hermes.AIAgent(session="hot")</div>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">👁️</div>
-                    <h3>Screen Context Awareness</h3>
-                    <p>Capture and analyze screen content with ⌘⇧S. Echo sees what you see and provides context-aware assistance.</p>
+                    <h3>Screen Context</h3>
+                    <p>Capture and analyze screen content with ⌘⇧S. Vision model processes screenshots for context-aware assistance during technical discussions.</p>
+                    <div class="feature-code">capture.screenshot() → vision.analyze()</div>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">📝</div>
-                    <h3>Obsidian Integration</h3>
-                    <p>Automatically saves meeting notes in Markdown format with transcriptions and AI-generated summaries.</p>
+                    <h3>Obsidian Vault</h3>
+                    <p>Automatic markdown note generation with structured meeting summaries, action items, and full diarized transcripts saved to your knowledge base.</p>
+                    <div class="feature-code">vault.save("YYYY-MM-DD-Meeting.md")</div>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">📅</div>
-                    <h3>Google Calendar Sync</h3>
-                    <p>Seamlessly integrate with Google Calendar to track meetings and automatically start recording when meetings begin.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🕵️</div>
-                    <h3>Privacy First</h3>
-                    <p>Undetectable during screen sharing with content protection mode. Your data stays local and secure.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Architecture Section -->
-        <section class="architecture">
-            <div class="architecture-content">
-                <h2 class="section-title">How It Works</h2>
-                <p class="section-subtitle">Echo bridges multiple technologies for seamless meeting intelligence</p>
-                
-                <div class="architecture-diagram">
-                    <div class="flow-chart">
-                        <div class="flow-item">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎤</div>
-                            <strong>Audio Capture</strong>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
-                                BlackHole + FFmpeg
-                            </p>
-                        </div>
-                        <span class="flow-arrow">→</span>
-                        <div class="flow-item">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
-                            <strong>Transcription</strong>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
-                                Deepgram API
-                            </p>
-                        </div>
-                        <span class="flow-arrow">→</span>
-                        <div class="flow-item">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠</div>
-                            <strong>AI Processing</strong>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
-                                Hermes Agent
-                            </p>
-                        </div>
-                        <span class="flow-arrow">→</span>
-                        <div class="flow-item">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💾</div>
-                            <strong>Storage</strong>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
-                                Obsidian Vault
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <p style="color: var(--text-secondary); margin-top: 2rem;">
-                    Echo acts as a seamless orchestration layer, capturing audio through macOS audio devices,
-                    transcribing in real-time with Deepgram, processing context with Hermes AI, and 
-                    automatically storing insights in your Obsidian knowledge base.
-                </p>
-            </div>
-        </section>
-
-        <!-- Installation Section -->
-        <section id="installation" class="installation">
-            <h2 class="section-title">Quick Installation</h2>
-            <p class="section-subtitle">Get Echo up and running in minutes</p>
-
-            <div class="install-steps">
-                <div class="step">
-                    <span class="step-number">1</span>
-                    <h4>Prerequisites</h4>
-                    <p>Ensure you have the required dependencies installed on your macOS system.</p>
-                    
-                    <div class="requirements-grid">
-                        <div class="requirement-item">
-                            <div class="requirement-icon">🍎</div>
-                            <div>
-                                <strong>macOS</strong>
-                                <div style="font-size: 0.875rem; color: var(--text-muted);">Apple Silicon</div>
-                            </div>
-                        </div>
-                        <div class="requirement-item">
-                            <div class="requirement-icon">🤖</div>
-                            <div>
-                                <strong>Hermes</strong>
-                                <div style="font-size: 0.875rem; color: var(--text-muted);">AI Agent</div>
-                            </div>
-                        </div>
-                        <div class="requirement-item">
-                            <div class="requirement-icon">🎵</div>
-                            <div>
-                                <strong>FFmpeg</strong>
-                                <div style="font-size: 0.875rem; color: var(--text-muted);">Audio processing</div>
-                            </div>
-                        </div>
-                        <div class="requirement-item">
-                            <div class="requirement-icon">🔊</div>
-                            <div>
-                                <strong>BlackHole</strong>
-                                <div style="font-size: 0.875rem; color: var(--text-muted);">Virtual audio</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">2</span>
-                    <h4>Install Hermes</h4>
-                    <p>Install the Hermes AI agent that powers Echo's intelligence.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Install Hermes (if not already installed)
-curl -fsSL https://raw.githubusercontent.com/nousresearch/hermes-agent/main/install.sh | bash
-
-# Verify installation
-hermes --version</pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">3</span>
-                    <h4>Install Dependencies</h4>
-                    <p>Install required system dependencies and audio tools.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Install FFmpeg
-brew install ffmpeg
-
-# Install BlackHole (download from website)
-# https://github.com/ExistentialAudio/BlackHole
-
-# Create Aggregate Device in Audio MIDI Setup:
-# Name: "OpenCluely In"
-# - Channel 0: Your Microphone
-# - Channels 1-2: BlackHole 2ch</pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">4</span>
-                    <h4>Clone and Setup Echo</h4>
-                    <p>Clone the repository and install Node.js dependencies.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Clone the repository
-git clone https://github.com/EstebanCastel/cluely-hermes.git
-cd cluely-hermes
-
-# Install dependencies
-npm install
-
-# Setup Deepgram API key
-mkdir -p ~/.Echo
-echo "DEEPGRAM_API_KEY=your_api_key_here" >> ~/.Echo/.env</pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">5</span>
-                    <h4>Build and Install</h4>
-                    <p>Build the application and install it to your Applications folder.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Create signing certificate (first time only)
-npm run create-cert
-
-# Build and install the app
-npm run build-and-install
-
-# Or run in development mode
-npm start</pre>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Integration Section -->
-        <section id="integration" class="integration">
-            <h2 class="section-title">Hermes Integration Guide</h2>
-            <p class="section-subtitle">Connect Echo with Hermes for powerful AI capabilities</p>
-
-            <div class="integration-card">
-                <h3>
-                    <span style="font-size: 1.5rem;">🔗</span>
-                    Configure Hermes as Provider
-                </h3>
-                
-                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                    Echo uses Hermes as its AI brain through a Python sidecar bridge. This integration enables
-                    contextual understanding of your meetings and intelligent responses.
-                </p>
-
-                <div class="step">
-                    <span class="step-number">1</span>
-                    <h4>Configure Hermes Provider</h4>
-                    <p>Set up Hermes with your preferred LLM provider (OpenAI, Claude, etc.).</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Configure Hermes
-hermes config
-
-# Add your API keys
-hermes config set openai.api_key YOUR_OPENAI_KEY
-# OR
-hermes config set anthropic.api_key YOUR_CLAUDE_KEY
-
-# Set default model
-hermes config set model gpt-4o  # or claude-3-opus</pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">2</span>
-                    <h4>Configure Echo Settings</h4>
-                    <p>Update Echo's configuration to connect with your Hermes installation.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Echo automatically finds Hermes at:
-# ~/.hermes/hermes-agent/venv/bin/python3
-
-# If using a custom Hermes location, update in Echo settings:
-# Settings → AI → Hermes Path</pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">3</span>
-                    <h4>Enable Meeting Context</h4>
-                    <p>Configure context persistence for meeting history across sessions.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Create Hermes skill for meeting context
-cat > ~/.hermes/skills/meeting-assistant.md << 'EOF'
----
-name: meeting-assistant
-description: Meeting context and history management
----
-
-# Meeting Assistant Skill
-
-When processing meeting transcripts:
-1. Identify key topics and action items
-2. Track speaker contributions
-3. Generate concise summaries
-4. Link to previous meeting context
-5. Extract decisions and next steps
-EOF
-
-# Enable the skill
-hermes skill enable meeting-assistant</pre>
-                    </div>
-                </div>
-            </div>
-
-            <div class="integration-card" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%); border-color: rgba(34, 197, 94, 0.3);">
-                <h3 style="color: var(--secondary);">
-                    <span style="font-size: 1.5rem;">📚</span>
-                    Obsidian Integration
-                </h3>
-                
-                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                    Automatically save meeting notes and transcripts to your Obsidian vault.
-                </p>
-
-                <div class="step">
-                    <span class="step-number" style="background: var(--secondary);">1</span>
-                    <h4>Configure Obsidian Vault</h4>
-                    <p>Set the path to your Obsidian vault in Echo settings.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Open Echo Settings (⌘,)
-# Navigate to: Settings → Storage → Obsidian
-# Set vault path: ~/Documents/ObsidianVault
-
-# Or configure via environment
-echo "OBSIDIAN_VAULT_PATH=~/Documents/ObsidianVault" >> ~/.Echo/.env</pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number" style="background: var(--secondary);">2</span>
-                    <h4>Meeting Notes Template</h4>
-                    <p>Echo automatically creates structured meeting notes.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Notes are saved as:
-# ObsidianVault/Meetings/YYYY-MM-DD-Meeting-Title.md
-
-# Example structure:
----
-date: 2024-01-15
-participants: ["You", "Colleague"]
-duration: 45min
-tags: #meeting #project-alpha
----
-
-## Summary
-[AI-generated summary]
-
-## Key Topics
-- Topic 1
-- Topic 2
-
-## Action Items
-- [ ] Action item 1
-- [ ] Action item 2
-
-## Transcript
-[Full diarized transcript]</pre>
-                    </div>
-                </div>
-            </div>
-
-            <div class="integration-card" style="background: linear-gradient(135deg, rgba(251, 146, 60, 0.1) 0%, rgba(251, 113, 133, 0.1) 100%); border-color: rgba(251, 146, 60, 0.3);">
-                <h3 style="color: #fb923c;">
-                    <span style="font-size: 1.5rem;">📅</span>
-                    Google Calendar Integration
-                </h3>
-                
-                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                    Connect with Google Calendar to automatically track and record scheduled meetings.
-                </p>
-
-                <div class="step">
-                    <span class="step-number" style="background: #fb923c;">1</span>
-                    <h4>Enable Google Calendar API</h4>
-                    <p>Set up Google Calendar API access for Echo.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># 1. Go to Google Cloud Console
-# 2. Create new project or select existing
-# 3. Enable Google Calendar API
-# 4. Create credentials (OAuth 2.0 Client ID)
-# 5. Download credentials.json
-
-# Place in Echo config directory
-mv ~/Downloads/credentials.json ~/.Echo/google-credentials.json</pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-number" style="background: #fb923c;">2</span>
-                    <h4>Authorize Echo</h4>
-                    <p>Grant Echo access to your calendar.</p>
-                    <div class="code-block">
-                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-                        <pre># Run Echo and navigate to Settings
-# Settings → Integrations → Google Calendar
-# Click "Connect Google Calendar"
-# Follow OAuth flow in browser
-
-# Echo will now:
-# - Show upcoming meetings
-# - Auto-start recording when meetings begin
-# - Add meeting context to transcripts</pre>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Advanced Features -->
-        <section class="features">
-            <h2 class="section-title">Advanced Configuration</h2>
-            <p class="section-subtitle">Customize Echo for your workflow</p>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⌨️</div>
-                    <h3>Custom Shortcuts</h3>
-                    <p>Configure keyboard shortcuts in Settings → Shortcuts. Default bindings:</p>
-                    <ul style="margin-top: 1rem; color: var(--text-secondary); list-style: none;">
-                        <li>⌘⇧S - Screen capture</li>
-                        <li>⌘⇧V - Show/hide Echo</li>
-                        <li>⌘⇧I - Toggle interaction</li>
-                        <li>⌘, - Open settings</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3>UI Customization</h3>
-                    <p>Adjust the interface to your preferences:</p>
-                    <ul style="margin-top: 1rem; color: var(--text-secondary); list-style: none;">
-                        <li>Window opacity and blur</li>
-                        <li>Font size and family</li>
-                        <li>Color themes</li>
-                        <li>Notification preferences</li>
-                    </ul>
+                    <h3>Calendar Sync</h3>
+                    <p>Google Calendar API integration for automatic meeting detection and contextual recording triggers based on scheduled events.</p>
+                    <div class="feature-code">calendar.events.watch(trigger=True)</div>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
-                    <h3>Privacy Controls</h3>
-                    <p>Fine-tune privacy and security settings:</p>
-                    <ul style="margin-top: 1rem; color: var(--text-secondary); list-style: none;">
-                        <li>Local-only processing mode</li>
-                        <li>Encryption for stored notes</li>
-                        <li>Auto-delete old recordings</li>
-                        <li>Selective app exclusions</li>
-                    </ul>
+                    <h3>Privacy Shield</h3>
+                    <p>Content protection mode makes UI undetectable during screen sharing. All processing happens locally with optional encryption.</p>
+                    <div class="feature-code">mode="stealth" encryption=AES-256</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Documentation -->
-        <section id="docs" style="margin: 6rem 0;">
-            <h2 class="section-title">Documentation & Resources</h2>
-            <p class="section-subtitle">Everything you need to master Echo</p>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 3rem;">
-                <a href="https://github.com/EstebanCastel/cluely-hermes/wiki" class="feature-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="feature-icon">📖</div>
-                    <h3>Documentation</h3>
-                    <p>Comprehensive guides and API reference</p>
-                </a>
-
-                <a href="https://github.com/EstebanCastel/cluely-hermes/issues" class="feature-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="feature-icon">🐛</div>
-                    <h3>Issue Tracker</h3>
-                    <p>Report bugs and request features</p>
-                </a>
-
-                <a href="https://hermes-agent.nousresearch.com" class="feature-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="feature-icon">🤖</div>
-                    <h3>Hermes Docs</h3>
-                    <p>Learn about the AI agent powering Echo</p>
-                </a>
-
-                <a href="https://github.com/EstebanCastel/cluely-hermes/discussions" class="feature-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="feature-icon">💬</div>
-                    <h3>Community</h3>
-                    <p>Join discussions and share experiences</p>
-                </a>
+    <!-- Architecture Section -->
+    <section id="architecture" class="architecture">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">// System Architecture</span>
+                <h2 class="section-title">How Echo Works</h2>
+                <p class="section-description">
+                    A coordinated pipeline from audio capture to intelligent insights
+                </p>
             </div>
-        </section>
-    </main>
+
+            <div class="architecture-diagram">
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <div class="flow-icon">🎤</div>
+                        <div class="flow-title">Audio Capture</div>
+                        <div class="flow-detail">BlackHole + FFmpeg</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">📝</div>
+                        <div class="flow-title">Transcription</div>
+                        <div class="flow-detail">Deepgram Nova-2</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🧠</div>
+                        <div class="flow-title">AI Processing</div>
+                        <div class="flow-detail">Hermes Agent</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">💾</div>
+                        <div class="flow-title">Storage</div>
+                        <div class="flow-detail">Obsidian Vault</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Showcase -->
+    <section class="code-showcase">
+        <div class="container">
+            <div class="code-grid">
+                <div class="code-content">
+                    <span class="section-badge">// Hermes Integration</span>
+                    <h3>Intelligent Context Pipeline</h3>
+                    <p>
+                        Echo bridges multiple services through a unified Python sidecar that maintains 
+                        hot session state with Hermes. Meeting context flows through the agent for 
+                        real-time analysis and decision extraction.
+                    </p>
+                    <a href="docs/INSTALLATION.md" class="btn btn-primary">
+                        View Integration Guide
+                    </a>
+                </div>
+                <div class="code-block-large">
+                    <div class="code-line">
+                        <span class="code-comment"># Initialize Hermes bridge</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="code-keyword">from</span> hermes <span class="code-keyword">import</span> AIAgent
+                    </div>
+                    <div class="code-line">
+                        <span class="code-keyword">from</span> sidecar <span class="code-keyword">import</span> HermesBridge
+                    </div>
+                    <div class="code-line"></div>
+                    <div class="code-line">
+                        agent = AIAgent(
+                    </div>
+                    <div class="code-line">
+                        &nbsp;&nbsp;model=<span class="code-string">"gpt-4o"</span>,
+                    </div>
+                    <div class="code-line">
+                        &nbsp;&nbsp;session_mode=<span class="code-string">"hot"</span>,
+                    </div>
+                    <div class="code-line">
+                        &nbsp;&nbsp;context_window=<span class="code-string">8000</span>
+                    </div>
+                    <div class="code-line">
+                        )
+                    </div>
+                    <div class="code-line"></div>
+                    <div class="code-line">
+                        <span class="code-comment"># Process meeting stream</span>
+                    </div>
+                    <div class="code-line">
+                        bridge.process_transcript(stream)
+                    </div>
+                    <div class="code-line">
+                        bridge.extract_insights()
+                    </div>
+                    <div class="code-line">
+                        bridge.save_to_obsidian()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section id="integration" class="integrations">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">// Ecosystem</span>
+                <h2 class="section-title">Seamless Integration</h2>
+                <p class="section-description">
+                    Works with your existing tools and workflows
+                </p>
+            </div>
+
+            <div class="integration-grid">
+                <div class="integration-card">
+                    <div class="integration-icon">🤖</div>
+                    <div class="integration-info">
+                        <h4>Hermes AI</h4>
+                        <p>Core reasoning engine</p>
+                    </div>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">📚</div>
+                    <div class="integration-info">
+                        <h4>Obsidian</h4>
+                        <p>Knowledge management</p>
+                    </div>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">📅</div>
+                    <div class="integration-info">
+                        <h4>Google Calendar</h4>
+                        <p>Meeting scheduling</p>
+                    </div>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">🎯</div>
+                    <div class="integration-info">
+                        <h4>Deepgram</h4>
+                        <p>Speech recognition</p>
+                    </div>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">🔊</div>
+                    <div class="integration-info">
+                        <h4>BlackHole</h4>
+                        <p>Audio routing</p>
+                    </div>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">🎬</div>
+                    <div class="integration-info">
+                        <h4>FFmpeg</h4>
+                        <p>Media processing</p>
+                    </div>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">🐙</div>
+                    <div class="integration-info">
+                        <h4>GitHub</h4>
+                        <p>Version control</p>
+                    </div>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">⚡</div>
+                    <div class="integration-info">
+                        <h4>Electron</h4>
+                        <p>Desktop framework</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-links">
-            <a href="https://github.com/EstebanCastel/cluely-hermes">GitHub</a>
-            <a href="https://github.com/EstebanCastel/cluely-hermes/wiki">Documentation</a>
-            <a href="https://github.com/EstebanCastel/cluely-hermes/issues">Support</a>
-            <a href="https://hermes-agent.nousresearch.com">Hermes</a>
-            <a href="https://github.com/EstebanCastel/cluely-hermes/blob/main/LICENSE">License</a>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Echo</h3>
+                    <p>
+                        Open-source meeting intelligence platform powered by Hermes AI. 
+                        Built for developers who need more than transcription.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#architecture">Architecture</a></li>
+                        <li><a href="#integration">Integration</a></li>
+                        <li><a href="docs/INSTALLATION.md">Installation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/EstebanCastel/cluely-hermes/wiki" target="_blank">Documentation</a></li>
+                        <li><a href="https://github.com/EstebanCastel/cluely-hermes/issues" target="_blank">Issues</a></li>
+                        <li><a href="https://hermes-agent.nousresearch.com" target="_blank">Hermes Docs</a></li>
+                        <li><a href="https://github.com/EstebanCastel/cluely-hermes/discussions" target="_blank">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="https://github.com/EstebanCastel/cluely-hermes" target="_blank">GitHub</a></li>
+                        <li><a href="https://discord.gg/echo-meeting" target="_blank">Discord</a></li>
+                        <li><a href="https://twitter.com/echo_meeting" target="_blank">Twitter</a></li>
+                        <li><a href="mailto:support@echo-meeting.dev">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Echo. Released under the MIT License.</p>
+                <div class="footer-social">
+                    <a href="https://github.com/EstebanCastel" target="_blank">Built with ❤️ by the community</a>
+                </div>
+            </div>
         </div>
-        <p>
-            Echo is open-source software released under the MIT License.<br>
-            Built with ❤️ by the community, powered by Hermes AI.
-        </p>
     </footer>
 
     <script>
-        // Copy code functionality
-        function copyCode(button) {
-            const codeBlock = button.parentElement.querySelector('pre');
-            const text = codeBlock.textContent;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                button.textContent = 'Copied!';
-                button.style.background = 'var(--secondary)';
-                button.style.borderColor = 'var(--secondary)';
-                button.style.color = 'white';
+        // Copy command functionality
+        function copyCommand() {
+            const command = 'git clone https://github.com/EstebanCastel/cluely-hermes.git';
+            navigator.clipboard.writeText(command).then(() => {
+                const button = document.querySelector('.copy-button');
+                button.textContent = 'COPIED!';
+                button.style.color = 'var(--accent-primary)';
+                button.style.borderColor = 'var(--accent-primary)';
                 
                 setTimeout(() => {
-                    button.textContent = 'Copy';
-                    button.style.background = '';
-                    button.style.borderColor = '';
+                    button.textContent = 'COPY';
                     button.style.color = '';
+                    button.style.borderColor = '';
                 }, 2000);
             });
         }
@@ -1091,32 +1152,31 @@ mv ~/Downloads/credentials.json ~/.Echo/google-credentials.json</pre>
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 80;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
                 }
             });
         });
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all feature cards and sections
-        document.querySelectorAll('.feature-card, .step, .integration-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
+        // Add glow effect on scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const nav = document.querySelector('nav');
+            
+            if (currentScroll > 50) {
+                nav.style.borderBottomColor = 'var(--accent-primary)';
+                nav.style.boxShadow = '0 0 20px rgba(0, 217, 146, 0.1)';
+            } else {
+                nav.style.borderBottomColor = '';
+                nav.style.boxShadow = '';
+            }
+            
+            lastScroll = currentScroll;
         });
     </script>
 </body>
