@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajustes de Echo</title>
+    <link href="./src/styles/common.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 100vw; height: 100vh; background: transparent; overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .settings-container {
+            width: 100%; height: 100%; background: #0c0c10;
+            border-radius: 14px; border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; color: rgba(255,255,255,0.92);
+        }
+        .settings-header {
+            padding: 12px 16px; -webkit-app-region: drag; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between;
+            background: #121218; border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .header-title { font-size: 14px; font-weight: 600; }
+        .header-actions { display: flex; gap: 8px; -webkit-app-region: no-drag; }
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 4px; padding: 8px 12px; flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06); background: #0f0f15;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 7px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;
+            color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 6px;
+            white-space: nowrap; transition: all .15s;
+        }
+        .tab:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .tab.active { background: #23232c; color: #fff; }
+        .content { flex: 1; padding: 20px; overflow-y: auto; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
+            color: rgba(255,255,255,0.4); margin: 4px 0 12px; }
+        .row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); gap: 16px;
+        }
+        .row:last-child { border-bottom: none; }
+        .row .label { font-size: 13px; color: rgba(255,255,255,0.92); }
+        .row .desc { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 3px; max-width: 380px; }
+        /* Toggle */
+        .toggle { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle .slider {
+            position: absolute; inset: 0; background: #33333d; border-radius: 999px;
+            cursor: pointer; transition: .2s;
+        }
+        .toggle .slider:before {
+            content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 3px;
+            background: #fff; border-radius: 50%; transition: .2s;
+        }
+        .toggle input:checked + .slider { background: #4caf50; }
+        .toggle input:checked + .slider:before { transform: translateX(18px); }
+        /* Select / input */
+        select.input-field, input.input-field {
+            background: #1c1c24; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+            padding: 8px 12px; color: #fff; font-size: 13px; min-width: 180px; cursor: pointer;
+        }
+        select.input-field { appearance: none; padding-right: 28px;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat; background-position: right 8px center; background-size: 16px; }
+        select.input-field option { background: #1a1a1a; color: #fff; }
+        .btn {
+            background: #23232c; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+            padding: 7px 14px; color: #fff; font-size: 12px; cursor: pointer; transition: .15s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn:hover { background: #2e2e3a; }
+        .btn.primary { background: #2d6cff; border-color: #2d6cff; }
+        .btn.primary:hover { background: #3b78ff; }
+        .btn.danger { background: #c0392b; border-color: #c0392b; }
+        /* Disguise grid */
+        .icon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 340px; }
+        .icon-option {
+            background: #16161c; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+            padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+            cursor: pointer; transition: .15s; font-size: 11px; color: rgba(255,255,255,0.7);
+        }
+        .icon-option:hover { background: #1e1e26; }
+        .icon-option.selected { border-color: #2d6cff; color: #fff; }
+        .icon-option img { width: 30px; height: 30px; object-fit: contain; }
+        .keybind { display: flex; align-items: center; justify-content: space-between; padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+        .kbd { background: #23232c; border: 1px solid rgba(255,255,255,0.12); border-radius: 5px;
+            padding: 2px 7px; font-size: 11px; margin-left: 4px; }
+        .profile-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: #2d6cff;
+            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+        .muted { color: rgba(255,255,255,0.45); font-size: 12px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+        #tempFeedback { font-size: 11px !important; }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-header">
+            <div class="header-title">Ajustes de Echo</div>
+            <div class="header-actions">
+                <button class="btn danger" id="quitButton"><i class="fas fa-power-off"></i> Salir</button>
+                <button class="btn" id="closeButton"><i class="fas fa-times"></i> Cerrar</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="general"><i class="fas fa-gear"></i> General</div>
+            <div class="tab" data-tab="calendar"><i class="fas fa-calendar"></i> Calendario</div>
+            <div class="tab" data-tab="keybinds"><i class="fas fa-keyboard"></i> Atajos</div>
+            <div class="tab" data-tab="profile"><i class="fas fa-user"></i> Perfil</div>
+            <div class="tab" data-tab="about"><i class="fas fa-circle-info"></i> Acerca de</div>
+        </div>
+
+        <div class="content">
+            <!-- GENERAL -->
+            <div class="panel active" id="panel-general">
+                <div class="section-title">General</div>
+                <div class="row">
+                    <div>
+                        <div class="label">Indetectabilidad</div>
+                        <div class="desc">Cuando está activo, Echo es invisible a la compartición / grabación de pantalla.</div>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="undetectableToggle" checked><span class="slider"></span></label>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="label">Abrir al iniciar sesión</div>
+                        <div class="desc">Abre Echo automáticamente al iniciar sesión.</div>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="launchAtLoginToggle"><span class="slider"></span></label>
+                </div>
+
+                <div class="section-title" style="margin-top:24px;">Disfraz (al compartir pantalla)</div>
+                <div class="desc" style="margin-bottom:10px;">Nombre e icono que Echo muestra en el dock / Monitor de Actividad.</div>
+                <div class="icon-grid" id="iconGrid">
+                    <div class="icon-option" data-icon="echo"><img src="./assests/icons/echo.png" alt="">Echo</div>
+                    <div class="icon-option" data-icon="terminal"><img src="./assests/icons/terminal-mono.png" alt="">Terminal</div>
+                    <div class="icon-option" data-icon="activity"><img src="./assests/icons/activity-mono.png" alt="">Activity</div>
+                    <div class="icon-option" data-icon="settings"><img src="./assests/icons/settings-mono.png" alt="">Settings</div>
+                </div>
+
+                <div class="section-title" style="margin-top:24px;">Idioma</div>
+                <div class="row">
+                    <div>
+                        <div class="label">Idioma de transcripción</div>
+                        <div class="desc">El idioma que hablas en las reuniones.</div>
+                    </div>
+                    <select class="input-field" id="transcriptionLanguage">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="multi">Multilingual</option>
+                        <option value="pt">Português</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="label">Idioma de respuesta</div>
+                        <div class="desc">Idioma preferido para las respuestas de Echo.</div>
+                    </div>
+                    <select class="input-field" id="outputLanguage">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="pt">Português</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+
+                <div class="section-title" style="margin-top:24px;">Audio</div>
+                <div class="row">
+                    <div>
+                        <div class="label">Transcripción en vivo (Deepgram)</div>
+                        <div class="desc">Micrófono + audio del sistema vía el dispositivo agregado "OpenCluely In", transcrito por Deepgram. Apágalo para dejar de escuchar.</div>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="sttToggle" checked><span class="slider"></span></label>
+                </div>
+                <div class="row">
+                    <div style="flex:1; min-width:0;">
+                        <div class="label">API key de Deepgram</div>
+                        <div class="desc">Necesaria para la transcripción. Se guarda en <code>~/.Echo/.env</code>. <span id="deepgramState" class="muted"></span></div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <input type="password" class="input-field" id="deepgramKey" placeholder="dg_..." style="min-width:190px;">
+                        <button class="btn primary" id="deepgramSave">Guardar</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="label">Separación de ventanas</div>
+                        <div class="desc">Separación entre ventanas acopladas (píxeles).</div>
+                    </div>
+                    <input type="number" class="input-field" id="windowGap" placeholder="20" min="0" max="100" style="min-width:90px;">
+                </div>
+
+                <div class="section-title" style="margin-top:24px;">Obsidian</div>
+                <div class="row">
+                    <div>
+                        <div class="label">Guardar reuniones automáticamente</div>
+                        <div class="desc">Al detener una grabación, guarda una nota diarizada + resumen de Hermes en tu vault (Echo/Reuniones).</div>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="obsidianAutoSaveToggle" checked><span class="slider"></span></label>
+                </div>
+            </div>
+
+            <!-- CALENDAR -->
+            <div class="panel" id="panel-calendar">
+                <div class="section-title">Calendario</div>
+                <div class="desc" style="margin-bottom:16px;">Conecta Google Calendar para que Echo (vía Hermes) vea tus reuniones y recordatorios.</div>
+                <div class="row">
+                    <div class="profile-row">
+                        <div class="avatar"><i class="fab fa-google"></i></div>
+                        <div>
+                            <div class="label">Google Calendar</div>
+                            <div class="muted" id="calendarStatus">Sin conectar</div>
+                        </div>
+                    </div>
+                    <button class="btn primary" id="calendarConnectBtn">Conectar Google</button>
+                </div>
+                <div id="calendarCodeRow" style="display:none; margin-top:14px;">
+                    <div class="desc" style="margin-bottom:8px;">Pega el código que te dio Google:</div>
+                    <div style="display:flex; gap:8px;">
+                        <input class="input-field" id="calendarCode" placeholder="Código de autorización" style="flex:1;">
+                        <button class="btn primary" id="calendarCodeSubmit">Enviar</button>
+                    </div>
+                </div>
+                <div class="desc" style="margin-top:16px; line-height:1.5;">
+                    Configuración única: crea un OAuth Client (Desktop) en
+                    <span style="color:#6E8BFF;">console.cloud.google.com/apis/credentials</span>,
+                    descarga <code>client_secret.json</code> y guárdalo en
+                    <code>~/.hermes/google_client_secret.json</code>. Luego pulsa Conectar.
+                </div>
+            </div>
+
+            <!-- KEYBINDS -->
+            <div class="panel" id="panel-keybinds">
+                <div class="section-title">Atajos de teclado</div>
+                <div class="desc" style="margin-bottom:12px;">Haz clic en un atajo y pulsa la nueva combinación. Esc cancela.</div>
+                <div id="keybindList"></div>
+            </div>
+
+            <!-- PROFILE -->
+            <div class="panel" id="panel-profile">
+                <div class="section-title">Perfil</div>
+                <div class="profile-row">
+                    <div class="avatar" id="profileAvatar">E</div>
+                    <div>
+                        <div class="label" id="profileName">Usuario de Echo</div>
+                        <div class="muted" id="profileEmail">—</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="label">Cuenta conectada</div>
+                        <div class="muted" id="profileGoogle">Ninguna cuenta de Google conectada</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT -->
+            <div class="panel" id="panel-about">
+                <div class="section-title">Acerca de</div>
+                <div class="row">
+                    <div>
+                        <div class="label">Echo</div>
+                        <div class="muted">Asistente personal con contexto · cerebro: Hermes</div>
+                    </div>
+                    <span class="muted" id="appVersion">v1.0.0</span>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="label">Cerebro</div>
+                        <div class="muted">OpenAI gpt-4o (visión) vía Hermes · respaldo Copilot</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./src/ui/settings-window.js"></script>
+</body>
+</html>

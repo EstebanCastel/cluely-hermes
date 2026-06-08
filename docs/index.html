@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echo — tu copiloto de reuniones para macOS</title>
+  <meta name="description" content="Echo escucha, ve tu pantalla y razona con Hermes. Overlay indetectable, transcripción diarizada y notas automáticas en Obsidian." />
+  <style>
+    :root { --bg:#0a0a0f; --card:#14141c; --fg:#f3f4f8; --muted:#9aa0b4; --accent:#6E8BFF; --line:rgba(255,255,255,.08); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif; background:var(--bg); color:var(--fg);
+      background-image: radial-gradient(900px 500px at 70% -10%, rgba(110,139,255,.18), transparent 60%); min-height:100vh; }
+    .wrap { max-width:960px; margin:0 auto; padding:80px 24px 60px; }
+    .logo { display:flex; align-items:center; gap:12px; margin-bottom:64px; }
+    .logo .mark { width:40px; height:40px; border-radius:11px; background:linear-gradient(135deg,#6E8BFF,#9b6eff);
+      display:flex; align-items:center; justify-content:center; font-weight:800; font-size:20px; }
+    .logo b { font-size:18px; letter-spacing:.5px; }
+    h1 { font-size:clamp(38px,7vw,68px); line-height:1.05; letter-spacing:-1.5px; font-weight:800; margin-bottom:20px; }
+    h1 .grad { background:linear-gradient(120deg,#6E8BFF,#b388ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .sub { font-size:clamp(16px,2.4vw,21px); color:var(--muted); max-width:620px; line-height:1.5; margin-bottom:40px; }
+    .cta { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+    .btn { display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg,#6E8BFF,#8a6bff); color:#fff;
+      text-decoration:none; font-weight:700; font-size:16px; padding:15px 26px; border-radius:12px; transition:transform .15s, box-shadow .15s;
+      box-shadow:0 10px 30px rgba(110,139,255,.35); }
+    .btn:hover { transform:translateY(-2px); box-shadow:0 14px 40px rgba(110,139,255,.5); }
+    .btn.secondary { background:transparent; border:1px solid var(--line); box-shadow:none; color:var(--fg); }
+    .hint { color:var(--muted); font-size:13px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:72px; }
+    .feat { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; }
+    .feat .ic { font-size:24px; margin-bottom:12px; }
+    .feat h3 { font-size:16px; margin-bottom:6px; }
+    .feat p { color:var(--muted); font-size:14px; line-height:1.5; }
+    footer { margin-top:72px; padding-top:24px; border-top:1px solid var(--line); color:var(--muted); font-size:13px;
+      display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    footer a { color:var(--accent); text-decoration:none; }
+    .req { margin-top:40px; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 24px; }
+    .req h3 { font-size:15px; margin-bottom:10px; }
+    .req ul { list-style:none; color:var(--muted); font-size:14px; line-height:1.9; }
+    .req code { background:rgba(255,255,255,.06); padding:1px 6px; border-radius:5px; color:#cdd6ff; font-size:13px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo"><div class="mark">◉</div><b>ECHO</b></div>
+
+    <h1>Tu copiloto de reuniones,<br /><span class="grad">invisible</span> en tu pantalla.</h1>
+    <p class="sub">Echo escucha la conversación (transcripción diarizada: tú y tu interlocutor), ve tu pantalla y razona con Hermes. Vive en un overlay discreto y guarda tus reuniones en Obsidian, solo.</p>
+
+    <div class="cta">
+      <a class="btn" href="https://github.com/EstebanCastel/cluely-hermes/releases/latest/download/Echo-1.0.0-arm64.dmg">⬇ Descargar para macOS</a>
+      <a class="btn secondary" href="https://github.com/EstebanCastel/cluely-hermes">Ver en GitHub</a>
+    </div>
+    <p class="hint">macOS · Apple Silicon · .dmg · gratis y de código abierto (MIT)</p>
+
+    <div class="grid">
+      <div class="feat"><div class="ic">🎙️</div><h3>Transcripción diarizada</h3><p>Separa tu micrófono del audio del sistema por canal — sabe quién dijo qué.</p></div>
+      <div class="feat"><div class="ic">👁️</div><h3>Ve tu pantalla</h3><p>Adjunta una captura con ⌘⇧S y el cerebro la analiza al instante.</p></div>
+      <div class="feat"><div class="ic">🧠</div><h3>Cerebro Hermes</h3><p>Razona con gpt‑4o y visión; con el contexto real de tu reunión.</p></div>
+      <div class="feat"><div class="ic">📝</div><h3>Notas en Obsidian</h3><p>Cada reunión queda guardada con transcripción y resumen, automáticamente.</p></div>
+      <div class="feat"><div class="ic">🕵️</div><h3>Indetectable</h3><p>Invisible al compartir pantalla. Modo disfraz para el dock.</p></div>
+      <div class="feat"><div class="ic">⌨️</div><h3>Atajos a tu gusto</h3><p>Pregunta, mueve, oculta. Todos los atajos son reasignables.</p></div>
+    </div>
+
+    <div class="req">
+      <h3>Requisitos</h3>
+      <ul>
+        <li>macOS (Apple Silicon)</li>
+        <li><code>Hermes</code> instalado en <code>~/.hermes/hermes-agent</code> (el cerebro)</li>
+        <li><code>ffmpeg</code> · <code>BlackHole</code> + un Aggregate Device "OpenCluely In"</li>
+        <li>Una API key de <a href="https://console.deepgram.com" style="color:#6E8BFF">Deepgram</a></li>
+      </ul>
+    </div>
+
+    <footer>
+      <span>Echo · cluely-hermes</span>
+      <span>Por <a href="https://github.com/EstebanCastel">EstebanCastel</a> · Licencia MIT</span>
+    </footer>
+  </div>
+</body>
+</html>
