@@ -1,0 +1,8 @@
+node_modules
+dist
+*.pyc
+__pycache__
+.vercel
+.git
+*.log
+.DS_Store
