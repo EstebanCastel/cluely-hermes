@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo — The Open Source Cluely Alternative Powered by Hermes</title>
+  <meta name="description" content="Echo is a free, open-source alternative to Cluely. Invisible AI overlay powered by Hermes Agent with full meeting context, transcripts, Obsidian integration, and Google Calendar sync.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════════════════════════
+       ECHO — Design System (Hermes Dark Authentic)
+       ══════════════════════════════════════════════════════════ */
+    :root {
+      --bg:         #170d02;
+      --bg-section: #1e1105;
+      --bg-card:    #221508;
+      --accent:     #ffac02;
+      --accent-dim: rgba(255, 172, 2, 0.15);
+      --foreground: #ffffff;
+      --midground:  #ffac02;
+      --muted:      rgba(255, 172, 2, 0.45);
+      --border:     rgba(255, 172, 2, 0.18);
+      --font-head:  'Barlow Condensed', sans-serif;
+      --font-body:  'Barlow', sans-serif;
+      --font-mono:  'JetBrains Mono', monospace;
+    }
+
+    /* ─── RESET ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--accent);
+      font-family: var(--font-body);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ─── HEADER / NAV ──────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: stretch;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-weight: 900;
+      font-size: 22px;
+      line-height: 1;
+      padding: 14px 24px;
+      border-right: 1px solid var(--border);
+      letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: stretch;
+    }
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+      border-right: 1px solid var(--border);
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--foreground); }
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 24px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      border-left: 1px solid var(--border);
+    }
+    .nav-socials a { color: var(--muted); }
+    .nav-socials a:hover { color: var(--accent); }
+
+    /* ─── HERO ──────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 80px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,172,2,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+    .hero-title {
+      font-family: var(--font-head);
+      font-weight: 900;
+      font-size: clamp(64px, 10vw, 140px);
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      color: var(--accent);
+      max-width: 900px;
+    }
+    .hero-desc {
+      margin-top: 40px;
+      max-width: 560px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+    .hero-install {
+      margin-top: 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 620px;
+    }
+    .install-step {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .install-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+    .install-code {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+    .install-code code {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--foreground);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font-head);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-divider {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── SECTION LABELS ────────────────────────────────────── */
+    .section-label {
+      font-family: var(--font-head);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── POWERED BY ────────────────────────────────────────── */
+    .powered-section {
+      padding: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .powered-tagline {
+      font-family: var(--font-head);
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 48px;
+      letter-spacing: -0.01em;
+    }
+    .powered-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+    .powered-card {
+      padding: 36px 28px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .powered-card:hover { background: var(--accent-dim); }
+    .powered-icon {
+      font-family: var(--font-head);
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .powered-name {
+      font-family: var(--font-head);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .powered-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--muted);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    /* ─── DEMO SECTION ──────────────────────────────────────── */
+    .demo-section {
+      padding: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .demo-left {
+      padding-right: 60px;
+      border-right: 1px solid var(--border);
+    }
+    .demo-window {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      overflow: hidden;
+    }
+    .demo-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+    .dot.red { background: #ff5f57; }
+    .dot.yellow { background: #febc2e; }
+    .dot.green { background: #28c840; }
+    .demo-body {
+      padding: 20px;
+      min-height: 320px;
+      color: var(--foreground);
+      text-transform: none;
+      letter-spacing: 0;
+      line-height: 1.7;
+    }
+    .demo-prompt { color: var(--muted); }
+    .demo-speaker { color: #6699ff; margin-top: 14px; }
+    .demo-response { color: var(--foreground); margin-top: 8px; }
+    .demo-code {
+      margin-top: 12px;
+      background: rgba(255,172,2,0.05);
+      border-left: 2px solid var(--accent);
+      padding: 12px 14px;
+      color: var(--accent);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .demo-right {
+      padding-left: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .demo-right h3 {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 20px;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .demo-right p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+      text-transform: none;
+      letter-spacing: 0.01em;
+      margin-bottom: 14px;
+    }
+
+    /* ─── FEATURES ──────────────────────────────────────────── */
+    .features-section {
+      padding: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+    .feature-card {
+      padding: 36px 28px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .feature-card:hover { background: var(--accent-dim); }
+    .feature-title {
+      font-family: var(--font-head);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .feature-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--muted);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    /* ─── ARCHITECTURE ──────────────────────────────────────── */
+    .arch-section {
+      padding: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .arch-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .arch-node {
+      padding: 24px 28px;
+      border: 1px solid var(--border);
+      text-align: center;
+      min-width: 140px;
+      transition: background 0.2s;
+    }
+    .arch-node:hover { background: var(--accent-dim); }
+    .arch-node-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .arch-node-name {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .arch-arrow {
+      font-size: 18px;
+      color: var(--accent);
+      padding: 0 10px;
+      opacity: 0.4;
+    }
+
+    /* ─── HERMES SETUP GUIDE ────────────────────────────────── */
+    .guide-section {
+      padding: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 40px;
+    }
+    .guide-step {
+      margin-bottom: 32px;
+    }
+    .guide-step:last-child { margin-bottom: 0; }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .step-num {
+      width: 26px; height: 26px;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 12px;
+      padding-left: 38px;
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+    .code-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--foreground);
+      text-transform: none;
+      letter-spacing: 0;
+      line-height: 1.6;
+      position: relative;
+      margin-left: 38px;
+    }
+    .code-block .copy-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+    }
+    .code-comment { color: var(--muted); }
+
+    /* ─── CONFIG TABLE ──────────────────────────────────────── */
+    .config-section {
+      padding: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .env-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 32px;
+      font-size: 13px;
+    }
+    .env-table th {
+      text-align: left;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .env-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+    .env-table tr:hover td { background: var(--accent-dim); }
+    .env-var {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0;
+    }
+    .env-required {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      display: inline-block;
+    }
+    .env-optional {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      background: rgba(255,172,2,0.05);
+      border: 1px solid rgba(255,172,2,0.1);
+      padding: 2px 6px;
+      display: inline-block;
+    }
+    .env-desc { color: var(--muted); }
+
+    /* ─── SHORTCUTS / INFO ──────────────────────────────────── */
+    .shortcuts-section {
+      padding: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .shortcut-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .shortcut-action { color: var(--muted); text-transform: none; letter-spacing: 0.01em; }
+    .shortcut-key {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    /* ─── MORE DETAILS TOGGLE ───────────────────────────────── */
+    .more-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      padding: 20px 0 0;
+      margin-top: 48px;
+      cursor: pointer;
+      font-family: var(--font-head);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    .more-toggle:hover { color: var(--accent); }
+    .more-content { display: none; }
+    .more-content.open { display: block; }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    footer {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--border);
+    }
+    .footer-cell {
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+    .footer-cell:last-child { border-right: none; }
+    .footer-cell a { color: var(--muted); }
+    .footer-cell a:hover { color: var(--accent); }
+
+    /* ─── NAV ICON ──────────────────────────────────────────── */
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* ─── POWERED IMAGES ────────────────────────────────────── */
+    .powered-img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 0 8px rgba(255,172,2,0.2));
+    }
+
+    /* ─── COMPARISON SLIDER ─────────────────────────────────── */
+    .compare-section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-container {
+      max-width: 1100px;
+      margin: 32px auto 0;
+      padding: 0 40px;
+    }
+    .compare-wrapper {
+      position: relative;
+      overflow: hidden;
+      cursor: ew-resize;
+      border: 1px solid var(--border);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .compare-img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .compare-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .compare-overlay img {
+      width: 100%;
+      min-width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: left top;
+    }
+    .compare-slider {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+      cursor: ew-resize;
+      z-index: 10;
+      transform: translateX(-50%);
+    }
+    .compare-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .compare-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-family: var(--font-head);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    /* ─── MOBILE ──────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      header { grid-template-columns: 1fr auto; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .demo-section, .shortcuts-section, .guide-grid { grid-template-columns: 1fr; }
+      .demo-left { padding-right: 0; border-right: none; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+      .demo-right { padding-left: 0; padding-top: 40px; }
+      .features-grid, .powered-grid { grid-template-columns: 1fr; }
+      .features-section, .shortcuts-section, .guide-section,
+      .config-section, .arch-section, .powered-section { padding: 48px 24px; }
+      .demo-section { padding: 48px 24px; }
+      footer { grid-template-columns: 1fr 1fr; }
+      .arch-flow { flex-direction: column; }
+      .arch-arrow { transform: rotate(90deg); }
+      .code-block, .step-desc { margin-left: 0; padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header>
+    <a class="nav-logo" href="#"><img src="img/echo-icon.svg" alt="Echo" class="nav-icon">ECHO</a>
+    <nav class="nav-links">
+      <a href="#demo">Demo</a>
+      <a href="#features">Features</a>
+      <a href="#hermes-setup">Hermes Setup</a>
+      <a href="#config">Config</a>
+      <a href="#docs">Docs</a>
+    </nav>
+    <div class="nav-socials">
+      <a href="https://github.com/EstebanCastel/cluely-hermes" target="_blank">GitHub</a>
+      <a href="#hermes-setup">Install</a>
+    </div>
+  </header>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <p class="hero-badge">OPEN SOURCE &bull; MIT LICENSE &bull; POWERED BY HERMES AGENT</p>
+    <h1 class="hero-title">THE MEETING<br>ASSISTANT THAT<br>KNOWS YOU.</h1>
+    <p class="hero-desc">
+      Not a recording bot that joins your call. Not a summary you read after.
+      An invisible overlay powered by Hermes Agent that brings your full context
+      &mdash; past meetings, Obsidian notes, calendar &mdash; into every
+      conversation in real time.
+    </p>
+    <div class="hero-install">
+      <div class="install-step">
+        <span class="install-label">1. CLONE</span>
+        <div class="install-code">
+          <code>git clone https://github.com/EstebanCastel/cluely-hermes.git && cd cluely-hermes</code>
+          <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+        </div>
+      </div>
+      <div class="install-step">
+        <span class="install-label">2. SETUP</span>
+        <div class="install-code">
+          <code>./setup.sh</code>
+          <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- ═══ POWERED BY ═══ -->
+  <section class="powered-section">
+    <p class="section-label">BUILT ON</p>
+    <p class="powered-tagline">THREE ENGINES. ONE CONTINUOUS CONTEXT.</p>
+    <div class="powered-grid">
+      <div class="powered-card">
+        <img src="img/hermesagent.webp" alt="Hermes Agent" class="powered-img">
+        <p class="powered-name">HERMES AGENT</p>
+        <p class="powered-desc">Persistent memory, skills, and reasoning. Every meeting becomes part of what Hermes knows about your work.</p>
+      </div>
+      <div class="powered-card">
+        <img src="img/obsidian-icon.webp" alt="Obsidian" class="powered-img">
+        <p class="powered-name">OBSIDIAN</p>
+        <p class="powered-desc">Meeting transcripts and notes sync directly to your vault. Searchable, linked, and always yours.</p>
+      </div>
+      <div class="powered-card">
+        <img src="img/gcal-icon.png" alt="Google Calendar" class="powered-img">
+        <p class="powered-name">GOOGLE CALENDAR</p>
+        <p class="powered-desc">Upcoming meetings, attendees, and agendas are pulled automatically so Echo knows what to prepare.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SEE IT IN ACTION ═══ -->
+  <section class="compare-section" id="demo">
+    <p class="section-label" style="padding:0 80px;">SEE IT IN ACTION</p>
+    <div class="compare-container">
+      <div class="compare-wrapper" id="compareWrapper">
+        <img src="img/echonovisible.png" alt="Without Echo — plain screen" class="compare-img compare-under">
+        <div class="compare-overlay" id="compareOverlay">
+          <img src="img/echovisible.png" alt="With Echo — invisible AI overlay active" class="compare-img">
+        </div>
+        <div class="compare-slider" id="compareSlider">
+          <div class="compare-handle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M8 4l-6 8 6 8M16 4l6 8-6 8" stroke="#ffac02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="compare-labels">
+        <span class="compare-label-left">WITHOUT ECHO</span>
+        <span class="compare-label-right">WITH ECHO OVERLAY</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURES ═══ -->
+  <section class="features-section" id="features">
+    <p class="section-label">FEATURES</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <p class="feature-title">HERMES AS ENGINE</p>
+        <p class="feature-desc">Not a wrapper around a single LLM. Hermes Agent is the reasoning engine &mdash; with persistent memory, auto-generated skills, and cross-session context that grows the longer you use it.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-title">LIVE TRANSCRIPTION</p>
+        <p class="feature-desc">Real-time speech-to-text captures everything said in the meeting. Transcripts are saved, indexed, and become part of Hermes's permanent knowledge base.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-title">OBSIDIAN VAULT SYNC</p>
+        <p class="feature-desc">Every transcript, summary, and action item flows into your Obsidian vault as linked markdown. Search across meetings. Build a knowledge graph of decisions.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-title">GOOGLE CALENDAR</p>
+        <p class="feature-desc">Echo reads your upcoming schedule &mdash; attendees, agendas, linked documents. Before a meeting starts, Hermes already knows the context and who will be there.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-title">STEALTH OVERLAY</p>
+        <p class="feature-desc">Invisible to Zoom, Teams, Meet, and Discord screen sharing. Click-through transparency, process disguise, always-on-top floating window only you can see.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-title">FULL CONTEXT ANSWERS</p>
+        <p class="feature-desc">When you ask a question mid-meeting, Hermes answers with knowledge from all your previous meetings, not just the current one. Decisions, dates, owners &mdash; everything recalled.</p>
+      </div>
+    </div>
+
+    <button class="more-toggle" onclick="toggleMore(this)">
+      MORE DETAILS &darr;
+    </button>
+    <div class="more-content">
+      <div style="padding-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+        <div>
+          <p style="font-family:var(--font-head);font-size:11px;letter-spacing:0.14em;color:var(--muted);margin-bottom:20px;">WHAT MAKES ECHO DIFFERENT</p>
+          <div class="shortcut-row"><span class="shortcut-action">Cluely uses a single-session LLM</span><span class="shortcut-key">ECHO USES HERMES</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">No memory between meetings</span><span class="shortcut-key">PERSISTENT MEMORY</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">No note-taking integration</span><span class="shortcut-key">OBSIDIAN SYNC</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">No calendar awareness</span><span class="shortcut-key">GCAL CONNECTED</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">Closed source, $15M company</span><span class="shortcut-key">OPEN SOURCE</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">Cloud-only, data leaves your machine</span><span class="shortcut-key">RUNS LOCALLY</span></div>
+        </div>
+        <div>
+          <p style="font-family:var(--font-head);font-size:11px;letter-spacing:0.14em;color:var(--muted);margin-bottom:20px;">ROADMAP</p>
+          <div class="shortcut-row"><span class="shortcut-action">Auto-hide during active screen share</span><span class="shortcut-key">WIP</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">Multi-model support via Hermes</span><span class="shortcut-key">SOON</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">Auto-typer for code snippets</span><span class="shortcut-key">SOON</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">Export meeting digest (md/PDF)</span><span class="shortcut-key">SOON</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">Slack / Teams message context</span><span class="shortcut-key">PLANNED</span></div>
+          <div class="shortcut-row"><span class="shortcut-action">Automatic action item tracking</span><span class="shortcut-key">PLANNED</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ARCHITECTURE ═══ -->
+  <section class="arch-section">
+    <p class="section-label">ARCHITECTURE</p>
+    <div class="arch-flow">
+      <div class="arch-node">
+        <p class="arch-node-label">INPUT</p>
+        <p class="arch-node-name">MEETING AUDIO</p>
+      </div>
+      <span class="arch-arrow">&rarr;</span>
+      <div class="arch-node">
+        <p class="arch-node-label">TRANSCRIPTION</p>
+        <p class="arch-node-name">WHISPER / AZURE</p>
+      </div>
+      <span class="arch-arrow">&rarr;</span>
+      <div class="arch-node">
+        <p class="arch-node-label">ENGINE</p>
+        <p class="arch-node-name">HERMES AGENT</p>
+      </div>
+      <span class="arch-arrow">&rarr;</span>
+      <div class="arch-node">
+        <p class="arch-node-label">STORAGE</p>
+        <p class="arch-node-name">OBSIDIAN VAULT</p>
+      </div>
+      <span class="arch-arrow">&rarr;</span>
+      <div class="arch-node">
+        <p class="arch-node-label">SCHEDULE</p>
+        <p class="arch-node-name">GOOGLE CALENDAR</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HERMES SETUP GUIDE ═══ -->
+  <section class="guide-section" id="hermes-setup">
+    <p class="section-label">CONNECT ECHO TO HERMES</p>
+    <div class="guide-grid">
+      <div>
+        <div class="guide-step">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">INSTALL HERMES AGENT</span>
+          </div>
+          <p class="step-desc">If you have not installed Hermes yet, run the one-liner. Skip this if Hermes is already running.</p>
+          <div class="code-block">
+            <span class="code-comment"># macOS / Linux</span><br>
+            curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash<br><br>
+            <span class="code-comment"># Windows (PowerShell)</span><br>
+            irm https://hermes-agent.nousresearch.com/install.ps1 | iex<br><br>
+            <span class="code-comment"># Then configure</span><br>
+            hermes setup
+            <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-title">INSTALL THE OBSIDIAN SKILL</span>
+          </div>
+          <p class="step-desc">Echo stores transcripts in your Obsidian vault. Hermes has a built-in Obsidian skill for reading, searching, and writing notes.</p>
+          <div class="code-block">
+            <span class="code-comment"># Verify the skill is available</span><br>
+            hermes skills list | grep obsidian<br><br>
+            <span class="code-comment"># Set your vault path</span><br>
+            hermes config set obsidian.vault_path ~/Documents/MyVault
+            <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="step-header">
+            <span class="step-num">3</span>
+            <span class="step-title">CONNECT GOOGLE CALENDAR</span>
+          </div>
+          <p class="step-desc">Echo reads your schedule via Google Workspace integration so Hermes knows your upcoming meetings, attendees, and agendas.</p>
+          <div class="code-block">
+            <span class="code-comment"># Install gws CLI</span><br>
+            pip install google-workspace-cli<br><br>
+            <span class="code-comment"># Authenticate</span><br>
+            gws auth login
+            <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="guide-step">
+          <div class="step-header">
+            <span class="step-num">4</span>
+            <span class="step-title">INSTALL ECHO</span>
+          </div>
+          <p class="step-desc">Clone the repo and run setup. Echo is an Electron app that creates the stealth overlay and manages audio capture.</p>
+          <div class="code-block">
+            git clone https://github.com/EstebanCastel/cluely-hermes.git<br>
+            cd cluely-hermes<br>
+            ./setup.sh
+            <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="step-header">
+            <span class="step-num">5</span>
+            <span class="step-title">CONFIGURE THE .ENV</span>
+          </div>
+          <p class="step-desc">Tell Echo where Hermes is running and which vault to use. The setup script creates this file from the template.</p>
+          <div class="code-block">
+            <span class="code-comment"># .env</span><br>
+            HERMES_HOST=localhost<br>
+            HERMES_PORT=8080<br>
+            OBSIDIAN_VAULT=~/Documents/MyVault<br>
+            GCAL_ENABLED=true<br>
+            SPEECH_PROVIDER=whisper<br>
+            WHISPER_MODEL=base
+            <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="step-header">
+            <span class="step-num">6</span>
+            <span class="step-title">START THE GATEWAY</span>
+          </div>
+          <p class="step-desc">Hermes gateway must be running so Echo can send queries. If already running (check with hermes status), skip this step.</p>
+          <div class="code-block">
+            <span class="code-comment"># Check if gateway is running</span><br>
+            hermes status | grep Gateway<br><br>
+            <span class="code-comment"># If not, start it</span><br>
+            hermes gateway start
+            <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONFIG TABLE ═══ -->
+  <section class="config-section" id="config">
+    <p class="section-label">CONFIGURATION</p>
+    <table class="env-table">
+      <thead>
+        <tr>
+          <th>VARIABLE</th>
+          <th>STATUS</th>
+          <th>DESCRIPTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="env-var">HERMES_HOST</span></td>
+          <td><span class="env-required">REQUIRED</span></td>
+          <td class="env-desc">Hermes Agent gateway host. Default: localhost</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">HERMES_PORT</span></td>
+          <td><span class="env-required">REQUIRED</span></td>
+          <td class="env-desc">Gateway port. Default: 8080</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">OBSIDIAN_VAULT</span></td>
+          <td><span class="env-required">REQUIRED</span></td>
+          <td class="env-desc">Absolute path to your Obsidian vault where transcripts will be stored</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">GCAL_ENABLED</span></td>
+          <td><span class="env-optional">OPTIONAL</span></td>
+          <td class="env-desc">Enable Google Calendar integration. Requires gws CLI authentication</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">SPEECH_PROVIDER</span></td>
+          <td><span class="env-optional">OPTIONAL</span></td>
+          <td class="env-desc">whisper (local, offline) or azure (real-time cloud). Mic hidden if unset</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">WHISPER_MODEL</span></td>
+          <td><span class="env-optional">OPTIONAL</span></td>
+          <td class="env-desc">Local Whisper model size: tiny, base, small, medium, large</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">AZURE_SPEECH_KEY</span></td>
+          <td><span class="env-optional">OPTIONAL</span></td>
+          <td class="env-desc">Azure Cognitive Services key for real-time live transcription</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">AZURE_SPEECH_REGION</span></td>
+          <td><span class="env-optional">OPTIONAL</span></td>
+          <td class="env-desc">Azure region (e.g. eastus). Required when using Azure Speech</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">TRANSCRIPT_FORMAT</span></td>
+          <td><span class="env-optional">OPTIONAL</span></td>
+          <td class="env-desc">Obsidian note format: markdown (default) or timestamped</td>
+        </tr>
+        <tr>
+          <td><span class="env-var">STEALTH_PROCESS_NAME</span></td>
+          <td><span class="env-optional">OPTIONAL</span></td>
+          <td class="env-desc">Process name disguise: Terminal, ActivityMonitor, Settings</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ KEYBOARD SHORTCUTS ═══ -->
+  <section class="shortcuts-section" id="docs">
+    <div>
+      <p class="section-label">KEYBOARD SHORTCUTS</p>
+      <div class="shortcut-row"><span class="shortcut-action">Capture screen and ask Hermes</span><span class="shortcut-key">&#8984;&#8679;S</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Toggle live transcription</span><span class="shortcut-key">Alt+R</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Show / hide overlay</span><span class="shortcut-key">&#8984;&#8679;V</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Open chat with Hermes</span><span class="shortcut-key">&#8984;&#8679;C</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Toggle click-through</span><span class="shortcut-key">&#8984;&#8679;I</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Summarize current meeting</span><span class="shortcut-key">&#8984;&#8679;M</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Settings</span><span class="shortcut-key">&#8984;,</span></div>
+    </div>
+    <div>
+      <p class="section-label">COMPATIBILITY</p>
+      <div class="shortcut-row"><span class="shortcut-action">macOS</span><span class="shortcut-key">SUPPORTED</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Windows (Git Bash / WSL)</span><span class="shortcut-key">SUPPORTED</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Linux (X11 / XWayland)</span><span class="shortcut-key">SUPPORTED</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Zoom screen sharing</span><span class="shortcut-key">BYPASSED</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Teams screen sharing</span><span class="shortcut-key">BYPASSED</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Google Meet screen sharing</span><span class="shortcut-key">BYPASSED</span></div>
+      <div class="shortcut-row"><span class="shortcut-action">Discord screen sharing</span><span class="shortcut-key">BYPASSED</span></div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-cell">ECHO v0.1.0</div>
+    <div class="footer-cell"><a href="https://nousresearch.com/hermes-agent/" target="_blank">HERMES AGENT &nearr;</a></div>
+    <div class="footer-cell"><a href="https://github.com/EstebanCastel/cluely-hermes" target="_blank">GITHUB &nearr;</a></div>
+    <div class="footer-cell">MIT LICENSE &bull; 2025</div>
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const block = btn.closest('.install-code, .code-block');
+      let text = '';
+      if (block.classList.contains('install-code')) {
+        text = block.querySelector('code').textContent.trim();
+      } else {
+        const clone = block.cloneNode(true);
+        clone.querySelectorAll('button, .code-comment').forEach(el => el.remove());
+        text = clone.textContent.trim();
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'COPIED';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      });
+    }
+
+    function toggleMore(btn) {
+      const content = btn.nextElementSibling;
+      content.classList.toggle('open');
+      btn.innerHTML = content.classList.contains('open')
+        ? 'LESS DETAILS &uarr;'
+        : 'MORE DETAILS &darr;';
+    }
+
+    // ─── Comparison Slider ───
+    (function() {
+      const wrapper = document.getElementById('compareWrapper');
+      const overlay = document.getElementById('compareOverlay');
+      const slider = document.getElementById('compareSlider');
+      if (!wrapper || !overlay || !slider) return;
+
+      function setOverlayImgWidth() {
+        const img = overlay.querySelector('img');
+        if (img) {
+          img.style.width = wrapper.offsetWidth + 'px';
+          img.style.minWidth = wrapper.offsetWidth + 'px';
+        }
+      }
+
+      // Wait for images to load
+      const imgs = wrapper.querySelectorAll('img');
+      let loaded = 0;
+      imgs.forEach(function(img) {
+        if (img.complete) { loaded++; }
+        else { img.addEventListener('load', function() { loaded++; if (loaded >= imgs.length) setOverlayImgWidth(); }); }
+      });
+      if (loaded >= imgs.length) setOverlayImgWidth();
+      window.addEventListener('resize', setOverlayImgWidth);
+
+      let isDragging = false;
+
+      function updateSlider(x) {
+        const rect = wrapper.getBoundingClientRect();
+        let pos = (x - rect.left) / rect.width;
+        pos = Math.max(0, Math.min(1, pos));
+        overlay.style.width = (pos * 100) + '%';
+        slider.style.left = (pos * 100) + '%';
+      }
+
+      wrapper.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        updateSlider(e.clientX);
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        updateSlider(e.clientX);
+      });
+      document.addEventListener('mouseup', function() { isDragging = false; });
+
+      wrapper.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        updateSlider(e.touches[0].clientX);
+      }, { passive: true });
+      document.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        updateSlider(e.touches[0].clientX);
+      }, { passive: true });
+      document.addEventListener('touchend', function() { isDragging = false; });
+    })();
+  </script>
+</body>
+</html>
